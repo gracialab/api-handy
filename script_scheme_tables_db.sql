@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS novelty (
   create_at timestamp
 );
 
-CREATE TABLE IF NOT EXISTS "order" (
+CREATE TABLE IF NOT EXISTS "orderp" (
   id bigint NOT NULL PRIMARY KEY DEFAULT nextval('order_id_seq'),
   order_description text,
   id_client bigint,
@@ -80,11 +80,11 @@ CREATE TABLE IF NOT EXISTS "user" (
   update_at timestamp
 );
 
-ALTER TABLE product ADD CONSTRAINT product_id_fk FOREIGN KEY (id) REFERENCES product_order (product_id);
 ALTER TABLE role ADD CONSTRAINT role_id_fk FOREIGN KEY (id) REFERENCES permission_role (role_id);
 ALTER TABLE permission_role ADD CONSTRAINT role_permission_permission_id_fk FOREIGN KEY (permission_id) REFERENCES permission (id);
 ALTER TABLE "user" ADD CONSTRAINT user_identification_fk FOREIGN KEY (identification) REFERENCES role_user (user_id);
 ALTER TABLE role_user ADD CONSTRAINT user_role_role_id_fk FOREIGN KEY (role_id) REFERENCES role (id);
-ALTER TABLE "order" ADD CONSTRAINT order_id_fk FOREIGN KEY (id) REFERENCES "user" (identification);
-ALTER TABLE novelty ADD CONSTRAINT novelty_id_order_fk FOREIGN KEY (id_order) REFERENCES "order" (id);
-ALTER TABLE product_order ADD CONSTRAINT product_order_order_id_fk FOREIGN KEY (order_id) REFERENCES "order" (id);
+ALTER TABLE "orderp" ADD CONSTRAINT order_id_fk FOREIGN KEY (id_client) REFERENCES "user" (identification);
+ALTER TABLE novelty ADD CONSTRAINT novelty_id_order_fk FOREIGN KEY (id_order) REFERENCES "orderp" (id);
+ALTER TABLE product_order ADD CONSTRAINT product_order_order_id_fk FOREIGN KEY (order_id) REFERENCES "orderp" (id);
+ALTER TABLE product_order ADD CONSTRAINT product_order_product_id_fk FOREIGN KEY (product_id) REFERENCES "product" (id);

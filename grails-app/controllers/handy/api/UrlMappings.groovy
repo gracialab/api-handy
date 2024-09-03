@@ -6,6 +6,12 @@ class UrlMappings {
         get "/$controller(.$format)?"(action:"index")
         get "/$controller/$id(.$format)?"(action:"show")
         post "/$controller(.$format)?"(action:"save")
+        "/saveOrder"(controller: "Order", action: "save", method: "POST")
+        "/Order/$id"(controller: 'Order', action: 'show') {
+            constraints {
+                id(matches: /\d+/) // Asegura que el ID sea un número
+            }
+        }
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
         "/"(controller: 'application', action:'index')
