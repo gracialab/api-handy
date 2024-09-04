@@ -1,6 +1,8 @@
 package handy.api
 
+
 class User {
+
     String name
     String lastname
     String username
@@ -13,6 +15,12 @@ class User {
 
     static hasMany = [roles: Role]
     static belongsTo = Role
+
+    static mapping = {
+        roles joinTable: [name: 'role_user', key: 'user_id', column: 'role_id']
+        table 'customer'
+        id column: 'identification'
+    }
 
     static constraints = {
         name blank: false
