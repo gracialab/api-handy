@@ -48,6 +48,8 @@ dataSource:
   dialect: org.hibernate.dialect.PostgreSQLDialect
 hibernate:
   cache:
-    queries: false
+    queries: true
+    show_sql: true
+    format_sql: true
     use_second_level_cache: false
     use_query_cache: false

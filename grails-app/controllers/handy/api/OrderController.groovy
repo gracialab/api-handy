@@ -1,7 +1,6 @@
 package handy.api
 
 import grails.gorm.transactions.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 
 class OrderController {
 
@@ -29,10 +28,9 @@ class OrderController {
 
     @Transactional
     def save() {
-        def data = request.JSON
-        Orderp order = new Orderp(data);
-        def valid = orderService.saveOrder(data)
-        if (valid && order.save(flush: true)) {
+        def dataJSON = request.JSON
+        def valid = orderService.saveOrder(dataJSON)
+        if (valid) {
             render status: 201, text: 'Order saved successfully'
         } else {
             render status: 400, text: 'Failed to save Order'
@@ -42,7 +40,7 @@ class OrderController {
     def delete() {
         def b = Orderp.get(params.id)
         if (!b) {
-            flash.message = "User not found for id ${params.id}"
+            flash.message = "Order not found for id ${params.id}"
             redirect(action:list)
         }
     }

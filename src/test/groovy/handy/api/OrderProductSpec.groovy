@@ -3,11 +3,11 @@ package handy.api
 import grails.testing.gorm.DomainUnitTest
 import spock.lang.Specification
 
-class OrderSpec extends Specification implements DomainUnitTest<Orderp> {
+class OrderProductSpec extends Specification implements DomainUnitTest<OrderProduct> {
 
      void "test domain constraints"() {
         when:
-        Orderp domain = new Orderp()
+        OrderProduct domain = new OrderProduct()
         //TODO: Set domain props here
 
         then:

@@ -1,17 +1,26 @@
 package handy.api
 
-import groovy.transform.CompileStatic
+import grails.gorm.transactions.Transactional
 
-@CompileStatic
 class OrderService {
 
-    def saveOrder(data) {
+    @Transactional
+    def saveOrder(Jsondata) {
         try {
-           println(data)
-           Object objetoOrder = data
-           def productos = objetoOrder.getAt("productos")
-           println(productos)
-           return true
+            def productIds = Jsondata.productIds
+            println(productIds)
+            Orderp order = new Orderp(Jsondata as Map)
+            // Buscar los productos por sus IDs
+            List<Product> products = Product.findAllByIdInList(productIds)
+            // Asociar los productos al pedido
+            products.each { product ->
+                order.addToProducts(product)
+            }
+            if (order.save(flush: true)) {
+               return true
+            } else {
+               return false
+            }
         } catch (Exception ex) {
            println "mensaje: ${ex.getMessage()}"
            ex.printStackTrace()
