@@ -1,33 +1,33 @@
 package handy.api
 
 class User {
-    Long identification
+
     String name
     String lastname
     String username
-    String phone
-    String password
-    String address
     String email
-    Date createAt
-    Date updateAt
+    String password
+    String phone
+    String address
+    String preferences
+    
+    static hasMany = [roles: Role]
+    static belongsTo = Role
 
     static mapping = {
-        id name: 'identification'
-        version false
-        createAt column: 'create_at'
-        updateAt column: 'update_at'
+        roles joinTable: [name: 'role_user', key: 'user_id', column: 'role_id']
+        table 't_user'
+        id column: 'identification'
     }
 
     static constraints = {
-        name nullable: false
-        email nullable: false, email: true
-        username nullable: false
-        password nullable: false
-        address nullable: true
-        phone nullable: true
+        name blank: false
         lastname nullable: true
-        createAt nullable: true
-        updateAt nullable: true
+        username blank: false, unique: true
+        email email: true, blank: false, unique: true
+        password blank: false
+        phone matches: "\\d{10}", blank: false
+        address nullable: true
+        preferences nullable: true
     }
 }

@@ -1,82 +1,70 @@
 package handy.api
 
 import grails.rest.RestfulController
-import grails.converters.JSON
-import org.springframework.transaction.annotation.Transactional
+import grails.validation.ValidationException
+import org.springframework.http.HttpStatus
 
-@Transactional
 class UserController extends RestfulController<User> {
     static responseFormats = ['json']
+
+    // Inyectamos el nuevo servicio UserService
+    UserService userService
 
     UserController() {
         super(User)
     }
 
+    // Método para guardar usuario utilizando el servicio UserService
     def save() {
-        // Leer los datos JSON de la solicitud
         def jsonData = request.JSON
         println "Datos recibidos: ${jsonData}"
 
-        // Verificar que todos los campos obligatorios están presentes
-        if (!jsonData.username || !jsonData.password) {
-            render status: 400, text: "Campos 'username' y 'password' son obligatorios"
+        // Validación de los campos requeridos
+        if (!jsonData.name || !jsonData.email || !jsonData.phone) {
+            render status: HttpStatus.BAD_REQUEST.value(), text: "Campos 'name', 'email' y 'phone' son obligatorios"
             return
         }
 
-        // Crear una instancia de User con los datos JSON
+        // Crear una nueva instancia de User con los datos proporcionados
         def user = new User(
-            name: jsonData.name ?: '',
+            name: jsonData.name,
             lastname: jsonData.lastname ?: '',
-            username: jsonData.username,
-            phone: jsonData.phone ?: '',
-            password: jsonData.password,
-            address: jsonData.address ?: '',
+            username: jsonData.username ?: '',
             email: jsonData.email,
-            createAt: new Date(), // Establece la fecha actual
-            updateAt: new Date()  // Establece la fecha actual
+            password: jsonData.password ?: '',
+            phone: jsonData.phone,
+            address: jsonData.address ?: '',
+            preferences: jsonData.preferences ?: '',
+            createAt: new Date(),
+            updateAt: new Date()
         )
 
-        if (!user.save(flush: true)) {
-            // Manejo de errores
-            render status: 400, text: "Datos inválidos: ${user.errors}"
-            return
+        try {
+            // Usamos el servicio UserService para guardar al usuario
+            userService.saveUser(user)
+            respond user, status: HttpStatus.CREATED
+        } catch (ValidationException e) {
+            def errorMessages = user.errors.allErrors.collect { it.defaultMessage }.join(', ')
+            render status: HttpStatus.UNPROCESSABLE_ENTITY.value(), text: "Datos inválidos: ${errorMessages}"
+        } catch (Exception e) {
+            def stackTrace = e.stackTrace.collect { "${it}" }.join('\n')
+            render status: HttpStatus.INTERNAL_SERVER_ERROR.value(), text: "Error interno del servidor: ${e.message}\nStacktrace:\n${stackTrace}"
         }
-
-        render status: 201, text: "Usuario creado exitosamente"
     }
 
-    def update() {
-        // Leer los datos JSON de la solicitud
-        def jsonData = request.JSON
-        Long id = jsonData.id
-
-        def user = User.findByIdentification(id)
-        if (user == null) {
-            render status: 404, text: "Usuario no encontrado"
-            return
+    // Mostrar usuario por ID
+    def show(Long id) {
+        def user = User.findById(id)
+        if (user) {
+            respond user
+        } else {
+            render status: HttpStatus.NOT_FOUND.value(), text: "Usuario no encontrado"
         }
-
-        // Actualizar el usuario con los nuevos datos
-        user.properties = jsonData
-        user.updateAt = new Date() // Actualiza la fecha de modificación
-
-        if (!user.save(flush: true)) {
-            // Manejo de errores
-            render status: 400, text: "Datos inválidos: ${user.errors}"
-            return
-        }
-
-        render status: 200, text: "Usuario actualizado exitosamente"
     }
 
-    def delete(Long id) {
-        def user = User.findByIdentification(id)
-        if (user == null) {
-            render status: 404, text: "Usuario no encontrado"
-            return
-        }
-
-        user.delete(flush: true)
-        render status: 200, text: "Usuario eliminado exitosamente"
+    // Listar todos los usuarios
+    def index() {
+        def users = User.list()
+        respond users
     }
 }
