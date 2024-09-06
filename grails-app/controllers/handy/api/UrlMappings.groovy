@@ -12,6 +12,11 @@ class UrlMappings {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
+        "/updateOrder/$id"(controller: "Order", action: "update") {
+            constraints {
+                id(matches: /\d+/) // Asegura que el ID sea un número
+            }
+        }
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
         "/"(controller: 'application', action:'index')

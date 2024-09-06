@@ -1,6 +1,7 @@
 package handy.api
 
 import grails.gorm.transactions.Transactional
+import groovy.json.JsonBuilder
 
 class OrderController {
 
@@ -9,21 +10,21 @@ class OrderController {
     def index() {
         def orderList
         try {
-            orderList = Orderp.list()
+            orderList = Order.list()
         } catch (Exception ex) {
             ex.printStackTrace()
         }
         render(Ordenes: orderList)
     }
 
-    // Este método manejará las solicitudes GET por ID
-    def show(Long id) {
-        def order = Orderp.get(id)
-        if (order) {
-            respond order // Envía la representación del libro como respuesta
-        } else {
-            render status: 404, text: 'Order not found' // Si no se encuentra el libro
+    def show(Integer id) {
+        def order = Order.get(id)
+        if (!order) {
+            render status: 404, text: "Order not found"
+            return
         }
+        JsonBuilder formatOrder = orderService.getOrder(order)
+        render formatOrder.toPrettyString()  // Renderiza el JSON
     }
 
     @Transactional
@@ -38,10 +39,31 @@ class OrderController {
     }
 
     def delete() {
-        def b = Orderp.get(params.id)
+        def b = Order.get(params.id)
         if (!b) {
-            flash.message = "Order not found for id ${params.id}"
-            redirect(action:list)
+            render status: 404, text: "Order not found for id ${params.id}"
         }
     }
+
+    // Método para actualizar un pedido
+    @Transactional
+    def update(Integer id) {
+        println("actualizar")
+        // Buscar el pedido existente por su ID
+        def order = Order.get(id)
+        if (!order) {
+            // Si el pedido no existe, retornar un error
+            flash.message = "Pedido no encontrado con ID: ${id}"
+            return
+        }
+        // Actualizar los campos del pedido con los parámetros recibidos
+        order.properties = params
+        if (order.save(flush: true)) {
+            render status: 201, text: 'Order updated successfully'
+        } else {
+            render status: 401, text: 'Failed to update Order '
+        }
+    }
+
+    
 }

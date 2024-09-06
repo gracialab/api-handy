@@ -1,30 +1,62 @@
 package handy.api
 
 import grails.gorm.transactions.Transactional
+import groovy.json.JsonBuilder
 
 class OrderService {
 
     @Transactional
     def saveOrder(Jsondata) {
-        try {
-            def productIds = Jsondata.productIds
-            println(productIds)
-            Orderp order = new Orderp(Jsondata as Map)
-            // Buscar los productos por sus IDs
-            List<Product> products = Product.findAllByIdInList(productIds)
-            // Asociar los productos al pedido
-            products.each { product ->
-                order.addToProducts(product)
+            def order = new Order(Jsondata as Map)
+            def productsData = Jsondata.productos
+            if (!order.save(flush: true)) {
+                throw new RuntimeException("Error al guardar el pedido: ${order.errors}")
             }
-            if (order.save(flush: true)) {
-               return true
-            } else {
-               return false
+            productsData.each { productData ->
+                def product = Product.get(productData.id)
+                if (!product) {
+                    throw new RuntimeException("Producto no encontrado")
+                }
+                def ProductOrder = new ProductOrder(
+                        product: product,
+                        order: order,
+                        quantity: productData.quantity,
+                        discount: productData.discount,
+                        subtotal: productData.subtotal,
+                        total: productData.total
+                )
+                if (!ProductOrder.save(flush: true)) {
+                    throw new RuntimeException("Error al guardar")
+                }
             }
-        } catch (Exception ex) {
-           println "mensaje: ${ex.getMessage()}"
-           ex.printStackTrace()
-           return false
+
+            return true
+    }
+
+    def validProduct(productsData) {
+        productsData.each { productData ->
+            def product = Product.get(productData.id)
+            if (!product) {
+                throw new RuntimeException("Producto no encontrado")
+            }
         }
     }
+
+    def getOrder(order) {
+        JsonBuilder json = new JsonBuilder()
+        return json {
+            cliente order.id_client?:"No asignado"
+            orderDate order.create_at
+            discounts order.discount
+            subtotal order.subtotal
+            total order.total
+            productos order.orderProducts.collect { op ->
+                [productId: op.product.id, productName: op.product.name,
+                 quantity: op.quantity, discount: op.discount,
+                 subtotal: op.subtotal, total: op.total]
+            }
+        }
+    }
+
+
 }
