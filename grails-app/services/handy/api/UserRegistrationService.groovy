@@ -7,10 +7,11 @@ import grails.validation.ValidationException
 class UserRegistrationService {
 
     def registerUser(User user) {
+        user.is_register = true
         if (!user.validate()) {
             throw new ValidationException("No se puede guardar el usuario", user.errors)
         }
-        Role role = Role.findByName("Cliente")
+        Role role = Role.findByNameIlike("cliente")
         if (!role) {
             throw new IllegalArgumentException("El rol ${role} no existe en la base de datos")
         }

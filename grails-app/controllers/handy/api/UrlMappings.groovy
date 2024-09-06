@@ -9,6 +9,11 @@ class UrlMappings {
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
         "/"(controller: 'application', action:'index')
+
+        "/api/register"(controller: "userRegistration", action: "register", method: "POST")
+        "/permissions"(controller: "permission", action: "save")
+
+
         "500"(view:'/error')
         "404"(view:'/notFound')
 
