@@ -9,8 +9,7 @@ class Product {
     Date create_at = new Date()
     Date update_at  = new Date()
 
-    //static hasMany = [order: Order]
-    static hasMany = [orderProducts: ProductOrder] // Relación muchos a muchos a través de OrderProduct
+    static hasMany = [productsOrder: ProductOrder] // Relación muchos a muchos a través de OrderProduct
 
     static mapping = {
         version false

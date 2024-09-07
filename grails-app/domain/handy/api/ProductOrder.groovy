@@ -16,12 +16,12 @@ class ProductOrder implements Serializable {
 
     static constraints = {
         quantity nullable: false, min: 1
-        subtotal nullable: false, scale: 2
-        total nullable: false, scale: 2
+        discount nullable: false,  min: 0.0
+        subtotal nullable: false, min: 0.0, scale: 2
+        total nullable: false, min: 0.0, scale: 2
 
     }
     static mapping = {
-        def version = version false
         id composite: ['product', 'order']  // Configura la clave compuesta de Order y Product
     }
 

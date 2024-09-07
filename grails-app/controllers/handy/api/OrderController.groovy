@@ -30,11 +30,11 @@ class OrderController {
     @Transactional
     def save() {
         def dataJSON = request.JSON
-        def valid = orderService.saveOrder(dataJSON)
-        if (valid) {
+        def response = orderService.saveOrder(dataJSON)
+        if (response.valid) {
             render status: 201, text: 'Order saved successfully'
         } else {
-            render status: 400, text: 'Failed to save Order'
+            render status: 400, text: "Failed to save Order : ${response.errors}"
         }
     }
 
@@ -45,15 +45,12 @@ class OrderController {
         }
     }
 
-    // Método para actualizar un pedido
     @Transactional
     def update(Integer id) {
-        println("actualizar")
-        // Buscar el pedido existente por su ID
         def order = Order.get(id)
         if (!order) {
             // Si el pedido no existe, retornar un error
-            flash.message = "Pedido no encontrado con ID: ${id}"
+            render status: 401, text: "Order not found ID: ${id}"
             return
         }
         // Actualizar los campos del pedido con los parámetros recibidos
