@@ -25,5 +25,4 @@ class UserRegistrationController extends RestfulController<User>{
             respond([message: e.message], status: HttpStatus.BAD_REQUEST)
         }
     }
-
 }

@@ -17,7 +17,7 @@ class User {
     static belongsTo = Role
 
     static mapping = {
-        roles joinTable: [name: 'role_user', key: 'user_id', column: 'role_id']
+        roles joinTable: [name: 'role_user', key: 'user_id', column: 'role_id'], fetch: 'join'
         table 't_user'
         id column: 'identification'
     }
@@ -26,7 +26,7 @@ class User {
         name blank: false
         lastname blank: false
         username blank: false
-        email email: true, blank: false, unique: true
+        email blank: false, nullable: false, email: true, unique: true
         phone matches: "\\d{10}", blank: false
         address nullable: true
         preferences nullable: true
