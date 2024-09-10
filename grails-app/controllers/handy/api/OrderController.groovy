@@ -38,6 +38,17 @@ class OrderController {
         }
     }
 
+    @Transactional
+    def update(Integer id) {
+        def dataJSON = request.JSON
+        def response = orderService.updateOrder(dataJSON, id);
+        if (response.valid) {
+            render status: 201, text: 'Order saved successfully'
+        } else {
+            render status: 400, text: "Failed to save Order : ${response.errors}"
+        }
+    }
+
     def delete() {
         def b = Order.get(params.id)
         if (!b) {
@@ -45,22 +56,22 @@ class OrderController {
         }
     }
 
-    @Transactional
-    def update(Integer id) {
+   @Transactional
+    def updateState(Integer id) {
         def order = Order.get(id)
         if (!order) {
-            // Si el pedido no existe, retornar un error
             render status: 401, text: "Order not found ID: ${id}"
             return
         }
-        // Actualizar los campos del pedido con los parámetros recibidos
         order.properties = params
+        order.update_at = new Date()
         if (order.save(flush: true)) {
-            render status: 201, text: 'Order updated successfully'
+            render status: 201, text: 'Order status updated successfully'
         } else {
             render status: 401, text: 'Failed to update Order '
         }
     }
+
 
     
 }
