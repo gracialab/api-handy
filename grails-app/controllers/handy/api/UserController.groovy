@@ -19,7 +19,7 @@ class UserController extends RestfulController<User> {
         def jsonData = request.JSON
         println "Datos recibidos: ${jsonData}"
 
-        // Validación de los campos requeridos
+        // Validación de campos obligatorios
         if (!jsonData.name || !jsonData.email || !jsonData.phone) {
             render status: HttpStatus.BAD_REQUEST.value(), text: "Campos 'name', 'email' y 'phone' son obligatorios"
             return
@@ -52,7 +52,7 @@ class UserController extends RestfulController<User> {
         }
     }
 
-    // Mostrar usuario por ID
+    // Método para mostrar un usuario por ID
     def show(Long id) {
         def user = User.findById(id)
         if (user) {
@@ -62,9 +62,44 @@ class UserController extends RestfulController<User> {
         }
     }
 
-    // Listar todos los usuarios
+    // Método para listar todos los usuarios
     def index() {
         def users = User.list()
         respond users
+    }
+
+    // Método para actualizar un usuario existente
+    def update(Long id) {
+        def jsonData = request.JSON
+        println "Datos recibidos para actualizar: ${jsonData}"
+
+        def user = User.findById(id)
+        if (!user) {
+            render status: HttpStatus.NOT_FOUND.value(), text: "Usuario no encontrado"
+            return
+        }
+
+        // Actualizar solo los campos proporcionados en el JSON
+        user.name = jsonData.name ?: user.name
+        user.lastname = jsonData.lastname ?: user.lastname
+        user.username = jsonData.username ?: user.username
+        user.email = jsonData.email ?: user.email
+        user.password = jsonData.password ?: user.password
+        user.phone = jsonData.phone ?: user.phone
+        user.address = jsonData.address ?: user.address
+        user.preferences = jsonData.preferences ?: user.preferences
+        user.updateAt = new Date()
+
+        try {
+            // Usamos el servicio UserService para actualizar al usuario
+            userService.updateUser(user)
+            respond user, status: HttpStatus.OK
+        } catch (ValidationException e) {
+            def errorMessages = user.errors.allErrors.collect { it.defaultMessage }.join(', ')
+            render status: HttpStatus.UNPROCESSABLE_ENTITY.value(), text: "Datos inválidos: ${errorMessages}"
+        } catch (Exception e) {
+            def stackTrace = e.stackTrace.collect { "${it}" }.join('\n')
+            render status: HttpStatus.INTERNAL_SERVER_ERROR.value(), text: "Error interno del servidor: ${e.message}\nStacktrace:\n${stackTrace}"
+        }
     }
 }
