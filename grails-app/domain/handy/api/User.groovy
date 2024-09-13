@@ -10,7 +10,8 @@ class User {
     String phone
     String address
     String preferences
-    Date updateAt 
+    Date updateAt
+    boolean active = true 
     
     static hasMany = [roles: Role]
     static belongsTo = Role

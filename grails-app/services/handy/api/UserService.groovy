@@ -37,4 +37,23 @@ class UserService {
             throw new ValidationException("Error al actualizar el usuario", user.errors)
         }
     }
+
+    def deactivateUser(Long id) {
+        def user = User.findById(id)
+        if (user) {
+            user.active = false
+            user.save(flush: true)
+        } else {
+            throw new IllegalArgumentException("User not found")
+        }
+    }
+
+    def deleteUser(Long id) {
+        def user = User.findById(id)
+        if (user) {
+            user.delete(flush: true)
+        } else {
+            throw new IllegalArgumentException("User not found")
+        }
+    }
 }

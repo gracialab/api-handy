@@ -102,4 +102,14 @@ class UserController extends RestfulController<User> {
             render status: HttpStatus.INTERNAL_SERVER_ERROR.value(), text: "Error interno del servidor: ${e.message}\nStacktrace:\n${stackTrace}"
         }
     }
+
+    def deactivate(Long id) {
+        userService.deactivateUser(id)
+        render(status: 200, text: "Usuario desactivado correctamente")
+    }
+
+    def delete(Long id) {
+        userService.deleteUser(id)
+        render(status: 200, text: "Usuario eliminado correctamente")
+    }
 }
