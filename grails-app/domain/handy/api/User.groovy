@@ -12,6 +12,7 @@ class User {
     String preferences
     Date updateAt
     boolean active = true 
+    String purchaseHistory 
     
     static hasMany = [roles: Role]
     static belongsTo = Role
@@ -31,5 +32,6 @@ class User {
         phone matches: "\\d{10}", blank: false // Valida que el teléfono tenga 10 dígitos
         address nullable: true
         preferences nullable: true
+        purchaseHistory nullable: true
     }
 }
