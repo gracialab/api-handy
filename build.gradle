@@ -11,6 +11,7 @@ plugins {
 group = "handy.api"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core/" }
 }
@@ -41,6 +42,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation('org.grails.plugins:mail:4.0.0')
+    implementation('org.grails.plugins:gsp:6.2.0')
     implementation("org.postgresql:postgresql:42.7.4")
     compileOnly("io.micronaut:micronaut-inject-groovy")
     console("org.grails:grails-console")

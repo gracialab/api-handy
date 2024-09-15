@@ -5,10 +5,10 @@ import groovy.json.JsonBuilder
 
 class OrderController {
 
-    OrderService orderService;
+    OrderService orderService
 
     def index() {
-        def orderList
+        def orderList = []
         try {
             orderList = Order.list()
         } catch (Exception ex) {
@@ -24,7 +24,7 @@ class OrderController {
             return
         }
         JsonBuilder formatOrder = orderService.getOrder(order)
-        render formatOrder.toPrettyString()  // Renderiza el JSON
+        render formatOrder.toPrettyString()  // Render to JSON
     }
 
     @Transactional
@@ -41,7 +41,7 @@ class OrderController {
     @Transactional
     def update(Integer id) {
         def dataJSON = request.JSON
-        def response = orderService.updateOrder(dataJSON, id);
+        def response = orderService.updateOrder(dataJSON, id)
         if (response.valid) {
             render status: 201, text: 'Order saved successfully'
         } else {
@@ -61,17 +61,17 @@ class OrderController {
         def order = Order.get(id)
         if (!order) {
             render status: 401, text: "Order not found ID: ${id}"
-            return
         }
         order.properties = params
         order.update_at = new Date()
+        def response = ""
         if (order.save(flush: true)) {
-            render status: 201, text: 'Order status updated successfully'
+            if(order.order_status == "CONFIRMADO") {
+                response = orderService.saveSalesReceipt(order)
+            }
+            render status: 201, text: response
         } else {
-            render status: 401, text: 'Failed to update Order '
+            render status: 401, text: "Failed to update Order"
         }
     }
-
-
-    
 }

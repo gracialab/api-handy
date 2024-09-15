@@ -6,6 +6,16 @@ info:
 grails:
   gorm:
     failOnError: true
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: saleshand7@gmail.com
+    password: kewe cijo jspn xedl
+    props:
+      "mail.smtp.auth": "true"
+      "mail.smtp.socketFactory.port": "465"
+      "mail.smtp.socketFactory.class": "javax.net.ssl.SSLSocketFactory"
+      "mail.smtp.socketFactory.fallback": "false"
   mime:
     disable:
       accept:

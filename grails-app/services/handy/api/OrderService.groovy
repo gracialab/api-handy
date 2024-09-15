@@ -1,11 +1,14 @@
 package handy.api
 
 import grails.gorm.transactions.Transactional
+import grails.plugins.mail.MailService
 import groovy.json.JsonBuilder
 import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
 
 class OrderService {
+
+    MailService mailService
 
     @Transactional
     def saveOrder(json) {
@@ -19,7 +22,7 @@ class OrderService {
                 throw new RuntimeException("Failed save the order: ${order.errors}")
             }
             json.productos.each { productData ->
-                validAndSaveProduct(order, productData)
+                response.put("errors", validAndSaveProduct(order, productData))
             }
             response.put("valid", true)
             return response
@@ -47,7 +50,7 @@ class OrderService {
     def validAndSaveProduct(order, productData){
         def product = Product.get(productData.id)
         if (!product) {
-            throw new RuntimeException("Product not found")
+            return "Product not found"
         }
         def ProductOrder = new ProductOrder(
                 product: product,
@@ -58,7 +61,7 @@ class OrderService {
                 total: productData.total
         )
         if (!ProductOrder.save(flush: true)) {
-            throw new RuntimeException("Error to save")
+            return "Error to save"
         }
     }
 
@@ -94,7 +97,6 @@ class OrderService {
         }
     }
 
-
     def getOrder(order) {
         JsonBuilder json = new JsonBuilder()
         return json {
@@ -108,6 +110,39 @@ class OrderService {
                  quantity: op.quantity, discount: op.discount,
                  subtotal: op.subtotal, total: op.total]
             }
+        }
+    }
+
+   def sendMail(Order order) {
+       try {
+           mailService.sendMail {
+               to 'valentinarvpe@gmail.com'
+               from 'saleshand7@gmail.com'
+               subject 'Notificación - Estado de tú pedido'
+               text "¡Hola!, ${order.id_client}  \n" +
+                       "Tu pedido #${order.id} ha cambiado de estado, " +
+                       "se encuentra ${order.order_status} \n" +
+                       "¡Gracias por confiar en nosotros!"
+           }
+           return "Send email successfully"
+       } catch(Exception ex){
+           return "Failed to send email"
+       }
+    }
+
+    def saveSalesReceipt(Order order) {
+        try {
+            def salesReceipt = new SalesReceipt();
+            salesReceipt.id_order = order.id
+            salesReceipt.id_client = order.id_client
+            if (!salesReceipt.save(flush:true)) {
+               return "Failed to save Sales of receipt"
+            }
+            def response =sendMail(order);
+            return "Order status updated successfully:  - ${response}"
+        } catch (Exception ex) {
+            ex.printStackTrace()
+            return "Failed to save Sales of receipt"
         }
     }
 
