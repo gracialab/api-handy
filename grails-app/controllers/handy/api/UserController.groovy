@@ -5,6 +5,10 @@ import grails.validation.ValidationException
 import org.springframework.http.HttpStatus
 import handy.api.UserSearchCriteria
 
+/**
+ * Controlador REST para gestionar usuarios.
+ * Maneja las operaciones CRUD y búsqueda avanzada de usuarios.
+ */
 class UserController extends RestfulController<User> {
     static responseFormats = ['json']
 
@@ -15,7 +19,9 @@ class UserController extends RestfulController<User> {
         super(User)
     }
 
-    // Método para guardar usuario utilizando el servicio UserService
+    /**
+     * Guarda un nuevo usuario utilizando los datos recibidos.
+     */
     def save() {
         def jsonData = request.JSON
         println "Datos recibidos: ${jsonData}"
@@ -26,7 +32,6 @@ class UserController extends RestfulController<User> {
             return
         }
 
-        // Crear una nueva instancia de User con los datos proporcionados
         def user = new User(
             name: jsonData.name,
             lastname: jsonData.lastname ?: '',
@@ -50,7 +55,9 @@ class UserController extends RestfulController<User> {
         }
     }
 
-    // Método para mostrar un usuario por ID
+    /**
+     * Muestra un usuario por ID.
+     */
     def show(Long id) {
         def user = User.findById(id)
         if (user) {
@@ -60,13 +67,17 @@ class UserController extends RestfulController<User> {
         }
     }
 
-    // Método para listar todos los usuarios
+    /**
+     * Lista todos los usuarios.
+     */
     def index() {
         def users = User.list()
         respond users
     }
 
-    // Método para actualizar un usuario existente
+    /**
+     * Actualiza un usuario existente por ID.
+     */
     def update(Long id) {
         def jsonData = request.JSON
         println "Datos recibidos para actualizar: ${jsonData}"
@@ -77,7 +88,6 @@ class UserController extends RestfulController<User> {
             return
         }
 
-        // Actualizar solo los campos proporcionados en el JSON
         updateUserFields(user, jsonData)
 
         try {
@@ -90,19 +100,25 @@ class UserController extends RestfulController<User> {
         }
     }
 
-    // Método para desactivar un usuario
+    /**
+     * Desactiva un usuario por ID.
+     */
     def deactivate(Long id) {
         userService.deactivateUser(id)
         render(status: 200, text: "Usuario desactivado correctamente")
     }
 
-    // Método para eliminar un usuario
+    /**
+     * Elimina un usuario por ID.
+     */
     def delete(Long id) {
         userService.deleteUser(id)
         render(status: 200, text: "Usuario eliminado correctamente")
     }
 
-    // Método de búsqueda avanzada
+    /**
+     * Búsqueda avanzada de usuarios según criterios.
+     */
     def searchUsers(UserSearchCriteria criteria) {
         if (!isSearchCriteriaValid(criteria)) {
             render status: HttpStatus.BAD_REQUEST.value(), text: "Debe proporcionar al menos un criterio de búsqueda."
@@ -117,7 +133,7 @@ class UserController extends RestfulController<User> {
         }
     }
 
-    // Helper para actualizar campos de usuario
+    // Métodos auxiliares para actualizar campos y manejar errores
     private void updateUserFields(User user, def jsonData) {
         user.name = jsonData.name ?: user.name
         user.lastname = jsonData.lastname ?: user.lastname
@@ -130,7 +146,6 @@ class UserController extends RestfulController<User> {
         user.updateAt = new Date()
     }
 
-    // Helper para validar criterios de búsqueda
     private boolean isSearchCriteriaValid(UserSearchCriteria criteria) {
         return criteria && (criteria.name || criteria.email || 
                             criteria.minPurchaseAmount || criteria.maxPurchaseAmount || 
@@ -138,13 +153,11 @@ class UserController extends RestfulController<User> {
                             criteria.minPurchaseCount || criteria.maxPurchaseCount)
     }
 
-    // Helper para manejar errores de validación
     private void renderValidationErrors(User user) {
         def errorMessages = user.errors.allErrors.collect { it.defaultMessage }.join(', ')
         render status: HttpStatus.UNPROCESSABLE_ENTITY.value(), text: "Datos inválidos: ${errorMessages}"
     }
 
-    // Helper para manejar errores internos del servidor
     private void renderInternalServerError(Exception e) {
         def stackTrace = e.stackTrace.collect { "${it}" }.join('\n')
         render status: HttpStatus.INTERNAL_SERVER_ERROR.value(), text: "Error interno del servidor: ${e.message}\nStacktrace:\n${stackTrace}"

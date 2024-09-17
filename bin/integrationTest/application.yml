@@ -48,3 +48,6 @@ hibernate:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
+server:
+  port: 8080
+  address: 0.0.0.0

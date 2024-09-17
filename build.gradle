@@ -22,8 +22,6 @@ configurations {
 
 dependencies {
     implementation("org.grails:grails-core")
-    implementation("org.grails:grails-datastore-gorm-hibernate5")
-    implementation("org.grails:grails-datastore-gorm-hibernate5")
     implementation("org.grails:grails-logging")
     implementation("org.grails:grails-plugin-databinding")
     implementation("org.grails:grails-plugin-i18n")
@@ -46,12 +44,14 @@ dependencies {
     runtimeOnly ("org.postgresql:postgresql:42.2.24")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.apache.tomcat:tomcat-jdbc")
-    testImplementation("io.micronaut:micronaut-inject-groovy")
+
+    // Dependencias de prueba
     testImplementation("org.grails:grails-gorm-testing-support")
-    testImplementation("org.grails:views-json-testing-support")
+    testImplementation("org.grails:grails-web-testing-support")
     testImplementation("org.spockframework:spock-core")
     testImplementation("io.micronaut:micronaut-http-client")
-
+    testImplementation("org.grails:grails-testing-support:2.2.0") // Para soporte de pruebas en controladores
+    testImplementation("org.grails:views-json-testing-support")
 }
 
 application {
