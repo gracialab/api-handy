@@ -1,8 +1,8 @@
 package handy.api
 /**
  * Clase que representa un usuario dentro del sistema.
- *
- * Esta clase contiene la información personal del usuario, así como los
+ * 
+ * Esta clase contiene la información personal del usuario, así como los 
  * detalles de su historial de compras, roles asociados, y preferencias.
  */
 class User {
@@ -19,9 +19,6 @@ class User {
     Date updateAt              // Fecha de la última actualización
     boolean active = true      // Estado del usuario (activo o desactivado)
     String purchaseHistory     // Historial de compras del usuario (opcional)
-    String verification_token
-    Boolean is_register = false
-    Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]
@@ -45,16 +42,5 @@ class User {
         address nullable: true                                                   // 'address' es opcional
         preferences nullable: true                                               // 'preferences' es opcional
         purchaseHistory nullable: true                                           // 'purchaseHistory' es opcional
-        password nullable: true, blank: false, validator: { val, obj ->
-            if (obj.is_register && (!val || !obj.validatePassword(val))) {
-                return ['invalidPassword']
-            }
-        }
-    }
-
-    def validatePassword(String password){
-        def passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
-
-        return password.matches(passwordPattern)
     }
 }
