@@ -45,6 +45,8 @@ dependencies {
     implementation('org.grails.plugins:mail:4.0.0')
     implementation('org.grails.plugins:gsp:6.2.0')
     implementation("org.postgresql:postgresql:42.7.4")
+    implementation('com.auth0:java-jwt:4.2.0')
+    implementation('org.grails.plugins:mail:4.0.0')
     compileOnly("io.micronaut:micronaut-inject-groovy")
     console("org.grails:grails-console")
     runtimeOnly("com.h2database:h2")
