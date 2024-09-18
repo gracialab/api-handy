@@ -109,11 +109,32 @@ class UserController extends RestfulController<User> {
     }
 
     /**
-     * Elimina un usuario por ID.
+     *  Elimina un usuario por ID con confirmación previa.
      */
     def delete(Long id) {
-        userService.deleteUser(id)
-        render(status: 200, text: "Usuario eliminado correctamente")
+        def user = User.findById(id)
+    
+        if (!user) {
+            render status: HttpStatus.NOT_FOUND.value(), text: "Usuario no encontrado"
+            return
+        }
+
+        // Verificar si se ha recibido la confirmación de eliminación
+        def confirm = params.confirm ?: request.JSON.confirm
+        if (!confirm || confirm != 'yes') {
+            // Si la confirmación no está presente o es diferente de 'yes', devolver advertencia
+            render status: HttpStatus.CONFLICT.value(), 
+                    text: "¿Está seguro de que desea eliminar este usuario? Esta acción no puede deshacerse. Confirme con 'yes'."
+            return
+        }
+
+        try {
+            userService.deleteUser(id)
+            render(status: HttpStatus.OK, text: "Usuario eliminado correctamente")
+        } catch (Exception e) {
+            render status: HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+                    text: "Error al eliminar el usuario: ${e.message}"
+        }
     }
 
     /**

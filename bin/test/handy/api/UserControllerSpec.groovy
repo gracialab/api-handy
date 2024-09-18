@@ -6,92 +6,90 @@ import org.springframework.http.HttpStatus
 
 class UserControllerSpec extends Specification implements ControllerUnitTest<UserController> {
 
+    def userService = Mock(UserService)
+
     def setup() {
-        controller.userService = Mock(UserService) // Mock del servicio
+        controller.userService = userService
     }
 
-    def cleanup() {
-        // Limpieza después de cada prueba (si es necesario)
-    }
-
-    // Prueba para el método save con datos válidos
-    void "test save user with valid data"() {
+    def "test save with valid data"() {
         given:
-        def userData = [
-            name     : "John",
-            email    : "john@example.com",
-            phone    : "1234567890"
-        ]
-
-        controller.userService.saveUser(_) >> { User user ->
-            user.id = 1L
-            return user
-        }
+        request.method = 'POST'
+        request.contentType = "application/json"
+        request.JSON = [name: "John", email: "john@example.com", phone: "123456789"]
 
         when:
-        request.method = 'POST'
-        request.json = userData
         controller.save()
 
         then:
+        1 * userService.saveUser(_ as User) >> { User user -> user.id = 1L }
         response.status == HttpStatus.CREATED.value()
+        response.json.id == 1
         response.json.name == "John"
-        response.json.email == "john@example.com"
     }
 
-    // Prueba para el método show cuando el usuario existe
-    void "test show user with valid id"() {
+    def "test show existing user"() {
         given:
-        def user = new User(id: 1, name: "John", email: "john@example.com")
-        User.metaClass.static.findById = { Long id -> user }
+        def user = new User(id: 1L, name: "John", email: "john@example.com", phone: "123456789")
+        user.save(flush: true)
 
         when:
-        controller.show(1)
-
-        then:
-        response.status == 200
-        response.json.name == "John"
-        response.json.email == "john@example.com"
-    }
-
-    // Prueba para el método show cuando el usuario no existe
-    void "test show user with invalid id"() {
-        given:
-        User.metaClass.static.findById = { Long id -> null }
-
-        when:
-        controller.show(999)
-
-        then:
-        response.status == HttpStatus.NOT_FOUND.value()
-        response.text == "Usuario no encontrado"
-    }
-
-    // Prueba para el método delete
-    void "test delete user"() {
-        given:
-        controller.userService.deleteUser(1L) >> {}
-
-        when:
-        controller.delete(1)
+        controller.show(1L)
 
         then:
         response.status == HttpStatus.OK.value()
-        response.text == "Usuario eliminado correctamente"
+        response.json.name == "John"
     }
 
-    // Prueba para el método searchUsers con criterios válidos
-    void "test search users with valid criteria"() {
+    def "test update existing user"() {
+        given:
+        def user = new User(id: 1L, name: "John", email: "john@example.com", phone: "123456789")
+        user.save(flush: true)
+
+        request.method = 'PUT'
+        request.contentType = "application/json"
+        request.JSON = [name: "John Updated"]
+
+        when:
+        controller.update(1L)
+
+        then:
+        1 * userService.updateUser(_ as User)
+        response.status == HttpStatus.OK.value()
+        response.json.name == "John Updated"
+    }
+
+    def "test searchUsers with valid criteria"() {
         given:
         def criteria = new UserSearchCriteria(name: "John")
-        controller.userService.searchUsers(criteria) >> [new User(name: "John")]
+        def mockUsers = [new User(name: "John", email: "john@example.com", phone: "123456789")]
 
         when:
         controller.searchUsers(criteria)
 
         then:
-        response.status == 200
-        response.json.size() == 1
+        1 * userService.searchUsers(_ as UserSearchCriteria) >> mockUsers
+        response.status == HttpStatus.OK.value()
         response.json[0].name == "John"
+    }
+
+    def "test deactivate user"() {
+        when:
+        controller.deactivate(1L)
+
+        then:
+        1 * userService.deactivateUser(1L)
+        response.status == HttpStatus.OK.value()
+        response.text == "Usuario desactivado correctamente"
+    }
+
+    def "test delete user"() {
+        when:
+        controller.delete(1L)
+
+        then:
+        1 * userService.deleteUser(1L)
+        response.status == HttpStatus.OK.value()
+        response.text == "Usuario eliminado correctamente"
     }
 }

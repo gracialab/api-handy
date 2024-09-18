@@ -11,6 +11,7 @@ plugins {
 group = "handy.api"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core/" }
 }
@@ -33,25 +34,29 @@ dependencies {
     implementation("org.grails.plugins:hibernate5")
     implementation("org.grails.plugins:views-json")
     implementation("org.grails.plugins:views-json-templates")
+    implementation("org.grails:grails-datastore-gorm:7.1.0")
+    implementation("org.grails:grails-core")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation('org.grails.plugins:mail:4.0.0')
+    implementation('org.grails.plugins:gsp:6.2.0')
+    implementation("org.postgresql:postgresql:42.7.4")
     compileOnly("io.micronaut:micronaut-inject-groovy")
     console("org.grails:grails-console")
-    runtimeOnly ("org.postgresql:postgresql:42.2.24")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.apache.tomcat:tomcat-jdbc")
 
     // Dependencias de prueba
+    testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation("org.grails:grails-gorm-testing-support")
     testImplementation("org.grails:grails-web-testing-support")
+    testImplementation("org.grails:views-json-testing-support")
     testImplementation("org.spockframework:spock-core")
     testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("org.grails:grails-testing-support:2.2.0") // Para soporte de pruebas en controladores
-    testImplementation("org.grails:views-json-testing-support")
 }
 
 application {
