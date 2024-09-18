@@ -27,6 +27,9 @@ class UrlMappings {
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
         "/"(controller: 'application', action:'index')
+
+        "/auth/register"(controller: "userRegistration", action: "register", method: "POST")
+
         "500"(view:'/error')
         "404"(view:'/notFound')
 
