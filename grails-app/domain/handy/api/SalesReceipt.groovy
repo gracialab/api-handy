@@ -7,6 +7,7 @@ class SalesReceipt {
     Date create_at = new Date()
 
     static constraints = {
+
     }
 
     static mapping = {

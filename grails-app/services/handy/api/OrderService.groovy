@@ -10,9 +10,11 @@ class OrderService {
 
     MailService mailService
 
+    //Service to save order with products in the table relational product_order
     @Transactional
     def saveOrder(json) {
         def response = new HashMap<>()
+        def resp = new HashMap<>()
         try {
             def order = new Order(json as Map)
             List<ObjectError> errors = new ArrayList<>()
@@ -22,18 +24,20 @@ class OrderService {
                 throw new RuntimeException("Failed save the order: ${order.errors}")
             }
             json.productos.each { productData ->
-                response.put("errors", validAndSaveProduct(order, productData))
+                resp.put("text", validAndSaveProduct(order, productData))
             }
+            response.put("message", resp)
             response.put("valid", true)
             return response
         } catch (Exception e) {
             e.printStackTrace()
             response.put("valid", false)
-            response.put("errors", e.getMessage())
+            response.put("message", e.getMessage())
             return response
         }
     }
 
+    //Method to valid the order
     def validOrder(order, errors, response) {
         order.errors.allErrors.each {
             if (it instanceof FieldError) {
@@ -42,12 +46,13 @@ class OrderService {
                 errors.add("Error: ${it.defaultMessage}")
             }
         }
-        response.put("errors", errors)
+        response.put("message", errors)
         response.put("valid", false)
         return response
     }
 
-    def validAndSaveProduct(order, productData){
+    //Method to valid an save the product_order
+    def validAndSaveProduct(order, productData) {
         def product = Product.get(productData.id)
         if (!product) {
             return "Product not found"
@@ -63,17 +68,19 @@ class OrderService {
         if (!ProductOrder.save(flush: true)) {
             return "Error to save"
         }
+        return "Saver order product"
     }
 
+    //Service to update order, receive id
     def updateOrder(json, id) {
         def response = new HashMap<>()
         try {
             Order order = Order.get(id)
             order.properties = json
             if (!order) {
-               response.put("valid", false)
-               response.put("text", "Order not found ID: $id")
-               return response
+                response.put("valid", false)
+                response.put("text", "Order not found ID: $id")
+                return response
             } else if (!order.save(flush: true)) {
                 response.put("valid", false)
                 response.put("text", "Failed save the order: ${order.errors}")
@@ -97,22 +104,24 @@ class OrderService {
         }
     }
 
+    //Service to get order, returns order formated
     def getOrder(order) {
         JsonBuilder json = new JsonBuilder()
         return json {
-            cliente order.id_client?:"No asignado"
+            cliente order.id_client ?: "No asignado"
             orderDate order.create_at
             discounts order.discount
             subtotal order.subtotal
             total order.total
             productos order.productsOrder.collect { op ->
                 [productId: op.product.id, productName: op.product.name,
-                 quantity: op.quantity, discount: op.discount,
-                 subtotal: op.subtotal, total: op.total]
+                 quantity : op.quantity, discount: op.discount,
+                 subtotal : op.subtotal, total: op.total]
             }
         }
     }
 
+    //Service to send email
    def sendMail(Order order) {
        try {
            mailService.sendMail {
@@ -130,6 +139,7 @@ class OrderService {
        }
     }
 
+    //Method to save the sales receipt, receive order
     def saveSalesReceipt(Order order) {
         try {
             def salesReceipt = new SalesReceipt();

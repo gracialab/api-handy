@@ -5,8 +5,10 @@ import groovy.json.JsonBuilder
 
 class OrderController {
 
+    //Called service
     OrderService orderService
 
+    //Endpoint simple, to get order list
     def index() {
         def orderList = []
         try {
@@ -17,6 +19,7 @@ class OrderController {
         render(Ordenes: orderList)
     }
 
+    //Endpoint, to get order by Id and return formatted json
     def show(Integer id) {
         def order = Order.get(id)
         if (!order) {
@@ -27,17 +30,19 @@ class OrderController {
         render formatOrder.toPrettyString()  // Render to JSON
     }
 
+    //Endpoint, to save the order, receive a json in body into request
     @Transactional
     def save() {
         def dataJSON = request.JSON
         def response = orderService.saveOrder(dataJSON)
         if (response.valid) {
-            render status: 201, text: 'Order saved successfully'
+            render status: 201, text: "Order saved successfully : ${response.message}"
         } else {
-            render status: 400, text: "Failed to save Order : ${response.errors}"
+            render status: 400, text: "Failed to save Order : ${response.message}"
         }
     }
 
+    //Endpoint, to update the order, update by id and receive a json in body into request
     @Transactional
     def update(Integer id) {
         def dataJSON = request.JSON
@@ -49,6 +54,7 @@ class OrderController {
         }
     }
 
+    //Endpoint simple, to delete order
     def delete() {
         def b = Order.get(params.id)
         if (!b) {
@@ -56,6 +62,7 @@ class OrderController {
         }
     }
 
+    //Endpoint to update status order, receive id and the queryparams receive order_status
    @Transactional
     def updateState(Integer id) {
         def order = Order.get(id)
