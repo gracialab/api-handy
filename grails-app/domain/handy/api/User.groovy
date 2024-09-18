@@ -11,7 +11,9 @@ class User {
     String phone
     String address
     String preferences
+    String verification_token
     Boolean is_register = false
+    Boolean verified = false
 
     static hasMany = [roles: Role]
     static belongsTo = Role
@@ -25,7 +27,7 @@ class User {
     static constraints = {
         name blank: false
         lastname blank: false
-        username blank: false
+        username blank: false, unique: true
         email blank: false, nullable: false, email: true, unique: true
         phone matches: "\\d{10}", blank: false
         address nullable: true
