@@ -1,5 +1,6 @@
 package handy.api
 
+import java.time.Instant
 
 class User {
 
@@ -12,6 +13,7 @@ class User {
     String address
     String preferences
     String verification_token
+    Instant token_expiration
     Boolean is_register = false
     Boolean verified = false
 
