@@ -68,7 +68,7 @@ class OrderService {
         if (!ProductOrder.save(flush: true)) {
             return "Error to save"
         }
-        return "Saver order product"
+        return "Save order product"
     }
 
     //Service to update order, receive id
@@ -135,6 +135,7 @@ class OrderService {
            }
            return "Send email successfully"
        } catch(Exception ex){
+           ex.printStackTrace()
            return "Failed to send email"
        }
     }
@@ -142,13 +143,13 @@ class OrderService {
     //Method to save the sales receipt, receive order
     def saveSalesReceipt(Order order) {
         try {
-            def salesReceipt = new SalesReceipt();
+            def salesReceipt = new SalesReceipt()
             salesReceipt.id_order = order.id
             salesReceipt.id_client = order.id_client
             if (!salesReceipt.save(flush:true)) {
                return "Failed to save Sales of receipt"
             }
-            def response =sendMail(order);
+            def response =sendMail(order)
             return "Order status updated successfully:  - ${response}"
         } catch (Exception ex) {
             ex.printStackTrace()

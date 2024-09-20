@@ -18,11 +18,8 @@ class UrlMappings {
         "/deactivateUser/$id"(controller: "User", action: "deactivate", method: "PUT")
         "/searchUsers"(controller: "User", action: "searchUsers", method: "POST")
 
-        // Página principal y manejo de errores
-        delete "/$controller/$id(.$format)?"(action:"delete")
-        get "/$controller(.$format)?"(action:"index")
-        get "/$controller/$id(.$format)?"(action:"show")
-        post "/$controller(.$format)?"(action:"save")
+        // Rutas personalizadas para Order (pedidos)
+        "/getClients"(controller: "Order", action: "getClients", method: "GET")
         "/saveOrder"(controller: "Order", action: "save", method: "POST")
         "/Order/$id"(controller: 'Order', action: 'show') {
             constraints {
@@ -34,23 +31,26 @@ class UrlMappings {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
-
-            "/updateStateOrder/$id"(controller: "Order", action: "updateState") {
+        "/updateStateOrder/$id"(controller: "Order", action: "updateState") {
+            constraints {
+                id(matches: /\d+/) // Asegura que el ID sea un número
+            }
+        }
+        "/assignClient/$id"(controller: "Order", action: "assignClient") {
             constraints {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
 
-        put "/$controller/$id(.$format)?"(action:"update")
-        patch "/$controller/$id(.$format)?"(action:"patch")
-        "/"(controller: 'application', action:'index')
+        // Página principal y manejo de errores
+        "/"(controller: 'application', action: 'index')
         "500"(view: '/error')
         "404"(view: '/notFound')
 
         "/auth/register"(controller: "userRegistration", action: "register", method: "POST")
 
-        "500"(view:'/error')
-        "404"(view:'/notFound')
+        "500"(view: '/error')
+        "404"(view: '/notFound')
 
     }
 }
