@@ -21,7 +21,7 @@ class User {
     String purchaseHistory     // Historial de compras del usuario (opcional)
     String verification_token
     Boolean is_register = false
-    Boolean verified = false
+    //Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]
@@ -29,6 +29,7 @@ class User {
 
     // Mapeo de la base de datos
     static mapping = {
+        version false
         roles joinTable: [name: 'role_user', key: 'user_id', column: 'role_id']  // Define la tabla intermedia para la relación muchos a muchos
         table 't_user'                                                           // Define la tabla donde se almacena la información del usuario
         id column: 'identification'                                              // Define la columna 'identification' como clave primaria
