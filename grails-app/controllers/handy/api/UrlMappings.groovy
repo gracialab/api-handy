@@ -31,12 +31,12 @@ class UrlMappings {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
-        "/updateStateOrder/$id"(controller: "Order", action: "updateState") {
+        "/updateStateOrder/$id"(controller: "Order", action: "updateState",  method: "PUT") {
             constraints {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
-        "/assignClient/$id"(controller: "Order", action: "assignClient") {
+        "/updateAssignClient/$id"(controller: "Order", action: "updateClient", method: "PUT") {
             constraints {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
