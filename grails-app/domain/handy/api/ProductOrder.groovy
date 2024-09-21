@@ -12,14 +12,14 @@ class ProductOrder implements Serializable {
     BigDecimal subtotal
     BigDecimal total
     Date create_at = new Date()
-    Date update_at  = new Date()
+    Date update_at = new Date()
 
     static constraints = {
         quantity nullable: false, min: 1
-        discount nullable: false,  min: 0.0
+        discount nullable: false, min: 0.0
         subtotal nullable: false, min: 0.0, scale: 2
         total nullable: false, min: 0.0, scale: 2
-
+        quantity nullable: false, min: 1
     }
     static mapping = {
         id composite: ['product', 'order']  // Configura la clave compuesta de Order y Product

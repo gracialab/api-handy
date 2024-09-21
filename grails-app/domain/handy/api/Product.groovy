@@ -15,4 +15,9 @@ class Product {
         version false
         order joinTable: [name: 'product_order', key: 'product_id', column: 'order_id']
     }
+
+    // Método para verificar si hay suficiente stock
+    boolean hasStock(int requestedQuantity) {
+        return stock >= requestedQuantity
+    }
 }
