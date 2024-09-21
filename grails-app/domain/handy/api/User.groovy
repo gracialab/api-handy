@@ -21,7 +21,7 @@ class User {
     String purchaseHistory     // Historial de compras del usuario (opcional)
     String verification_token
     Boolean is_register = false
-    Boolean verified = false
+    //Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]
@@ -45,6 +45,7 @@ class User {
         address nullable: true                                                   // 'address' es opcional
         preferences nullable: true                                               // 'preferences' es opcional
         purchaseHistory nullable: true                                           // 'purchaseHistory' es opcional
+        verification_token nullable: true
         password nullable: true, blank: false, validator: { val, obj ->
             if (obj.is_register && (!val || !obj.validatePassword(val))) {
                 return ['invalidPassword']
