@@ -119,6 +119,16 @@ class UserController extends RestfulController<User> {
             return
         }
 
+        // Buscar órdenes asociadas al usuario
+        //def orders = Order.findByIdClient(id)
+        def orders = []
+        orders = Order.findAllWhere(id_client: user.id)
+        if (orders.size() > 0) {
+            render status: HttpStatus.CONFLICT.value(), 
+                    text: "No se puede eliminar el usuario porque tiene pedidos asociadas."
+            return
+        }
+
         // Verificar si se ha recibido la confirmación de eliminación
         def confirm = params.confirm ?: request.JSON.confirm
         if (!confirm || confirm != 'yes') {
@@ -129,6 +139,7 @@ class UserController extends RestfulController<User> {
         }
 
         try {
+            
             userService.deleteUser(id)
             render(status: HttpStatus.OK, text: "Usuario eliminado correctamente")
         } catch (Exception e) {

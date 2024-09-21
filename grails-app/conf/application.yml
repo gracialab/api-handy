@@ -48,10 +48,10 @@ grails:
     default:
       codec: html
 dataSource:
-  url: jdbc:postgresql://localhost:5432/SalesManagerDB
+  url: jdbc:postgresql://localhost:5432/salesmanagerdb
   driverClassName: org.postgresql.Driver
   username: 'postgres'
-  password: 'password'
+  password: 'pos123'
   pooled: true
   jmxExport: true
   dbCreate: update
@@ -63,3 +63,6 @@ hibernate:
     format_sql: true
     use_second_level_cache: false
     use_query_cache: false
+server:
+  port: 8080
+  address: 0.0.0.0    
