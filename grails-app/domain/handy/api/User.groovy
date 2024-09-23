@@ -1,4 +1,7 @@
 package handy.api
+
+import java.time.Instant
+
 /**
  * Clase que representa un usuario dentro del sistema.
  *
@@ -20,6 +23,7 @@ class User {
     boolean active = true      // Estado del usuario (activo o desactivado)
     String purchaseHistory     // Historial de compras del usuario (opcional)
     String verification_token
+    Instant token_expiration
     Boolean is_register = false
     //Boolean verified = false
 

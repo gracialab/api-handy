@@ -3,6 +3,8 @@ package handy.api
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 
+import java.time.Instant
+
 
 class UserRegistrationService {
 
@@ -25,6 +27,8 @@ class UserRegistrationService {
 
         String token = tokenService.generateToken(user)
         user.verification_token = token
+        Instant expirationDate = Instant.now().plusSeconds(86400)
+        user.token_expiration = expirationDate
 
         if (!user.validate()) {
             throw new ValidationException("No se puede guardar el usuario", user.errors)

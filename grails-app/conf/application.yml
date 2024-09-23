@@ -47,15 +47,39 @@ grails:
   views:
     default:
       codec: html
-dataSource:
-  url: jdbc:postgresql://localhost:5432/salesmanagerdb
-  driverClassName: org.postgresql.Driver
-  username: 'postgres'
-  password: 'pos123'
-  pooled: true
-  jmxExport: true
-  dbCreate: update
-  dialect: org.hibernate.dialect.PostgreSQLDialect
+environments:
+  development:
+    dataSource:
+      url: jdbc:postgresql://localhost:5432/salesmanagerdb
+      driverClassName: org.postgresql.Driver
+      username: postgres
+      password: 'admin'
+      pooled: true
+      jmxExport: true
+      dbCreate: update
+
+  production:
+    dataSource:
+      dbCreate: update
+      url: postgresql://handy-user-admin:BUlu5Ermev0Z@ep-late-forest-a5ixy0bx.us-east-2.aws.neon.tech/handy-api-db?sslmode=require
+      username: handy-user-admin
+      password: BUlu5Ermev0Z
+      properties:
+        jmxEnabled: true
+        initialSize: 5
+
+
+    test:
+      dataSource:
+        url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+        driverClassName: org.h2.Driver
+        username: sa
+        password: ''
+        pooled: true
+        jmxExport: true
+        dbCreate: update
+
+
 hibernate:
   cache:
     queries: true
@@ -65,4 +89,4 @@ hibernate:
     use_query_cache: false
 server:
   port: 8080
-  address: 0.0.0.0    
+  address: 0.0.0.0

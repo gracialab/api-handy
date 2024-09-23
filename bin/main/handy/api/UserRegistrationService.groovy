@@ -3,7 +3,6 @@ package handy.api
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 
-
 class UserRegistrationService {
 
     def springSecurityService

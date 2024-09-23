@@ -47,7 +47,12 @@ class UrlMappings {
         "500"(view: '/error')
         "404"(view: '/notFound')
 
-        "/auth/register"(controller: "userRegistration", action: "register", method: "POST")
+        "/login/register"(controller: "userRegistration", action: "register", method: "POST")
+
+        "/list"(controller: "userRegistration", action: "listUsers", method: "GET")
+
+        "/verifyAccount"(controller: "userRegistration", action: "verifyAccount", method: "GET")
+
 
         "500"(view: '/error')
         "404"(view: '/notFound')
