@@ -20,12 +20,12 @@ class User {
     String address             // Dirección del usuario (opcional)
     String preferences         // Preferencias del usuario (opcional)
     Date updateAt              // Fecha de la última actualización
-    boolean active = true      // Estado del usuario (activo o desactivado)
+    Boolean active = true      // Estado del usuario (activo o desactivado)
     String purchaseHistory     // Historial de compras del usuario (opcional)
     String verification_token
     Instant token_expiration
     Boolean is_register = false
-    //Boolean verified = false
+    Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]
@@ -33,7 +33,7 @@ class User {
 
     // Mapeo de la base de datos
     static mapping = {
-        version false
+//        version false
         roles joinTable: [name: 'role_user', key: 'user_id', column: 'role_id']  // Define la tabla intermedia para la relación muchos a muchos
         table 't_user'                                                           // Define la tabla donde se almacena la información del usuario
         id column: 'identification'                                              // Define la columna 'identification' como clave primaria
@@ -51,6 +51,7 @@ class User {
         preferences nullable: true                                               // 'preferences' es opcional
         purchaseHistory nullable: true                                           // 'purchaseHistory' es opcional
         verification_token nullable: true
+        updateAt nullable: true
         password nullable: true, blank: false, validator: { val, obj ->
             if (obj.is_register && (!val || !obj.validatePassword(val))) {
                 return ['invalidPassword']
