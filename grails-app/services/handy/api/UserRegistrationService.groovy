@@ -27,7 +27,7 @@ class UserRegistrationService {
 
         String token = tokenService.generateToken(user)
         user.verification_token = token
-        Instant expirationDate = Instant.now().plusSeconds(30)
+        Instant expirationDate = Instant.now().plusSeconds(86400)
         user.token_expiration = expirationDate
 
         if (!user.validate()) {
