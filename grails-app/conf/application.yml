@@ -4,58 +4,18 @@ info:
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
 grails:
-  serverURL: "http://localhost:8080"
+  gorm:
+    failOnError: true
   mail:
-    host: 'smtp.gmail.com'
-    port: 587
-    username: 'saleshand7@gmail.com'
-    password: 'kewe cijo jspn xedl'
+    host: smtp.gmail.com
+    port: 465
+    username: saleshand7@gmail.com
+    password: kewe cijo jspn xedl
     props:
-      mail:
-        smtp:
-          auth: 'true'
-          starttls:
-            enable: 'true'
-            port: 587
-  plugin:
-    springsecurity:
-      rejectIfNoRule: true
-      rejectPublicInvocations: true
-      userLookup:
-#        passwordEncoder: 'bcrypt' #encriptar password
-        usernamePropertyName: 'email'
-        userDomainClassName: 'handy.api.User'
-        authorityJoinClassName: null  # No se usa una clase intermedia
-      authority:
-        className: 'handy.api.Role'
-      securityConfigType: "Annotation"  # Usar anotaciones para la configuración de seguridad
-      interceptUrlMap:
-        # Permitir acceso público solo a /login/register
-        - pattern: '/login/register'
-          access: 'permitAll'
-        # Permitir acceso público a /login/auth (esto será utilizado para autenticación)
-        - pattern: '/login/auth'
-          access: 'permitAll'
-
-      rest:
-        login:
-          endpointUrl: '/login/auth'
-        token:
-          storage:
-            jwt:
-              secretKey: 'secret'
-      sessionManagement:
-        sessionCreationPolicy: 'STATELESS'
-      filterChain:
-        chainMap:
-          - pattern: '/login/auth'
-            filters: 'JOINED_FILTERS,-csrfFilter'
-#          - pattern: '/login/register'
-#            filters: 'JOINED_FILTERS,-csrfFilter'
-#          - pattern: '/userRegistration/**'
-#            filters: 'JOINED_FILTERS'
-#          - pattern: '/**'
-#            filters: 'JOINED_FILTERS'
+      "mail.smtp.auth": "true"
+      "mail.smtp.socketFactory.port": "465"
+      "mail.smtp.socketFactory.class": "javax.net.ssl.SSLSocketFactory"
+      "mail.smtp.socketFactory.fallback": "false"
   mime:
     disable:
       accept:
@@ -122,10 +82,11 @@ environments:
 
 hibernate:
   cache:
-    queries: false
+    queries: true
+    show_sql: true
+    format_sql: true
     use_second_level_cache: false
     use_query_cache: false
-
-logging:
-  level:
-    grails.plugin.springsecurity: DEBUG
+server:
+  port: 8080
+  address: 0.0.0.0

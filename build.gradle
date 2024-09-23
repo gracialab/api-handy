@@ -11,6 +11,7 @@ plugins {
 group = "handy.api"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core/" }
 }
@@ -33,6 +34,8 @@ dependencies {
     implementation("org.grails.plugins:hibernate5")
     implementation("org.grails.plugins:views-json")
     implementation("org.grails.plugins:views-json-templates")
+    implementation("org.grails:grails-datastore-gorm:7.1.0")
+    implementation("org.grails:grails-core")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -47,19 +50,18 @@ dependencies {
     implementation 'org.grails.plugins:mail:4.0.0'
 
     compileOnly("io.micronaut:micronaut-inject-groovy")
-
-
     console("org.grails:grails-console")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.apache.tomcat:tomcat-jdbc")
+
+    // Dependencias de prueba
     testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation("org.grails:grails-gorm-testing-support")
+    testImplementation("org.grails:grails-web-testing-support")
     testImplementation("org.grails:views-json-testing-support")
     testImplementation("org.spockframework:spock-core")
     testImplementation("io.micronaut:micronaut-http-client")
-
-    testImplementation("org.grails:grails-web-testing-support")
 
 }
 
