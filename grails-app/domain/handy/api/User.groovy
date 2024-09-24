@@ -51,6 +51,7 @@ class User {
         preferences nullable: true                                               // 'preferences' es opcional
         purchaseHistory nullable: true                                           // 'purchaseHistory' es opcional
         verification_token nullable: true
+        token_expiration nullable: true
         updateAt nullable: true
         password nullable: true, blank: false, validator: { val, obj ->
             if (obj.is_register && (!val || !obj.validatePassword(val))) {

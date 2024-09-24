@@ -25,14 +25,16 @@ class UserRegistrationService {
 
         user.addToRoles(role)
 
+        if (!user.validate()) {
+            throw new ValidationException("No se puede guardar el usuario", user.errors)
+        }
+
+        user.save(flush: true)
+
         String token = tokenService.generateToken(user)
         user.verification_token = token
         Instant expirationDate = Instant.now().plusSeconds(86400)
         user.token_expiration = expirationDate
-
-        if (!user.validate()) {
-            throw new ValidationException("No se puede guardar el usuario", user.errors)
-        }
 
         user.save(flush: true)
         return user
