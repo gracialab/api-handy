@@ -72,7 +72,17 @@ class UserController extends RestfulController<User> {
      */
     def index() {
         def users = User.list()
-        respond users
+        def userData = users.collect { user ->
+            return [
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                preferences: user.preferences
+            ]
+        }
+        respond userData
     }
 
     /**
