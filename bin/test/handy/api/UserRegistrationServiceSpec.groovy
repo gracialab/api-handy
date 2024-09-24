@@ -6,46 +6,7 @@ import spock.lang.Specification
 
 class UserRegistrationServiceSpec extends Specification implements ServiceUnitTest<UserRegistrationService> {
 
-//    UserRegistrationService service = new UserRegistrationService()
-
-    def userRegistrationService
-
-    void setup() {
-        // Inject your service instance
-        userRegistrationService = Mock(UserRegistrationService)
-    }
-
-    @Transactional
-    void "should register a valid user and assign the 'cliente' role"() {
-        given:
-        def user = new User(
-                name: "Andrés",
-                lastname: "Diaz",
-                username: "andres24",
-                email: "andres24@gmail.com",
-                password: "Password123!",
-                phone: "1234567890",
-                address: "Ipiales - Nariño"
-        )
-        user.validate() // Assume validation passes
-
-        and:
-        // Mock Role finding (replace with actual logic if needed)
-        userRegistrationService.findByNameIlike("cliente") >> Role.newInstance(name: "cliente")
-
-        when:
-        def registeredUser = userRegistrationService.registerUser(user)
-
-        then:
-        registeredUser != null
-        registeredUser.isRegistered == true
-        registeredUser.roles.contains(Role.findByNameIlike("cliente"))
-
-        // Additional assertions for other user properties
-
-        0 * userRegistrationService.save(_) // Verify save wasn't called directly (mocking)
-
-    }
+    UserRegistrationService service = new UserRegistrationService()
 
  // Simula las clases de dominio
     void "Registro de usuario exitoso"() {

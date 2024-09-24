@@ -9,7 +9,7 @@ class Order {
     BigDecimal subtotal
     BigDecimal total
     Date create_at = new Date()
-    Date update_at  = new Date()
+    Date update_at = new Date()
     static hasMany = [productsOrder: ProductOrder] // Relación muchos a muchos a través de OrderProduct
     static belongsTo = Product
 

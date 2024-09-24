@@ -3,6 +3,9 @@ package handy.api
 import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 
+import java.time.Instant
+
+
 class UserRegistrationService {
 
     def springSecurityService
@@ -22,12 +25,16 @@ class UserRegistrationService {
 
         user.addToRoles(role)
 
-        String token = tokenService.generateToken(user)
-        user.verification_token = token
-
         if (!user.validate()) {
             throw new ValidationException("No se puede guardar el usuario", user.errors)
         }
+
+        user.save(flush: true)
+
+        String token = tokenService.generateToken(user)
+        user.verification_token = token
+        Instant expirationDate = Instant.now().plusSeconds(86400)
+        user.token_expiration = expirationDate
 
         user.save(flush: true)
         return user
