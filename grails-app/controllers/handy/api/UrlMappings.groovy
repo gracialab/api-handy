@@ -53,6 +53,8 @@ class UrlMappings {
         "/verifyAccount"(controller: "userRegistration", action: "verifyAccount", method: "GET")
         "/login"(controller: "login", action: "auth", method: "POST")
 
+        "/password/forgot"(controller: "passwordReset", action: "forgotPassword", method: "POST")
+        "/password/reset"(controller: "passwordReset", action: "resetPassword")
 
         "500"(view: '/error')
         "404"(view: '/notFound')
