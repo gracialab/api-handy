@@ -3,6 +3,7 @@ package handy.api
 class UrlMappings {
 
     static mappings = {
+        "/users"(resources: 'user') 
         // CRUD básico
         delete "/$controller/$id(.$format)?"(action: "delete")
         get "/$controller(.$format)?"(action: "index")
