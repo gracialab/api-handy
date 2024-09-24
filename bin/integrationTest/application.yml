@@ -4,6 +4,18 @@ info:
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
 grails:
+  gorm:
+    failOnError: true
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: saleshand7@gmail.com
+    password: kewe cijo jspn xedl
+    props:
+      "mail.smtp.auth": "true"
+      "mail.smtp.socketFactory.port": "465"
+      "mail.smtp.socketFactory.class": "javax.net.ssl.SSLSocketFactory"
+      "mail.smtp.socketFactory.fallback": "false"
   mime:
     disable:
       accept:
@@ -36,18 +48,18 @@ grails:
     default:
       codec: html
 dataSource:
-  url: jdbc:postgresql://localhost:5432/salesmanagerdb
+  url: jdbc:postgresql://localhost:5432/SalesManagerDB
   driverClassName: org.postgresql.Driver
-  username: postgres
-  password: 'pos123'
+  username: 'postgres'
+  password: 'password'
   pooled: true
   jmxExport: true
   dbCreate: update
+  dialect: org.hibernate.dialect.PostgreSQLDialect
 hibernate:
   cache:
-    queries: false
+    queries: true
+    show_sql: true
+    format_sql: true
     use_second_level_cache: false
     use_query_cache: false
-server:
-  port: 8080
-  address: 0.0.0.0
