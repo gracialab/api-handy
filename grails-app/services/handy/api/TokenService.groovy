@@ -23,6 +23,7 @@ class TokenService {
                     .withIssuer('handy')
                     .withSubject(user.name)
                     .withClaim("Roles", roles)
+                    .withClaim("id", user.id)
                     .sign(algorithm)
         } catch (JWTCreationException ex) {
             log.error("Error al crear el token JWT: ${ex.message}", ex)

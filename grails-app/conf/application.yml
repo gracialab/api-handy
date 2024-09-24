@@ -23,7 +23,7 @@ grails:
       rejectIfNoRule: true
       rejectPublicInvocations: true
       userLookup:
-        #        passwordEncoder: 'bcrypt' #encriptar password
+        passwordEncoder: 'bcrypt' #encriptar password
         usernamePropertyName: 'email'
         userDomainClassName: 'handy.api.User'
         authorityJoinClassName: null  # No se usa una clase intermedia
@@ -37,13 +37,7 @@ grails:
         # Permitir acceso público a /login/auth (esto será utilizado para autenticación)
         - pattern: '/login/auth'
           access: 'permitAll'
-      rest:
-        login:
-          endpointUrl: '/login/auth'
-        token:
-          storage:
-            jwt:
-              secretKey: 'secret'
+
       sessionManagement:
         sessionCreationPolicy: 'STATELESS'
       filterChain:
@@ -122,6 +116,6 @@ hibernate:
     format_sql: true
     use_second_level_cache: false
     use_query_cache: false
-server:
-  port: 8080
-  address: 0.0.0.0
+#server:
+#  port: 8080
+#  address: 0.0.0.0

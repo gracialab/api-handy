@@ -50,6 +50,7 @@ class UrlMappings {
         // Rutas para autenticacion
         "/login/register"(controller: "userRegistration", action: "register", method: "POST")
         "/verifyAccount"(controller: "userRegistration", action: "verifyAccount", method: "GET")
+        "/login"(controller: "login", action: "auth", method: "POST")
 
 
         "500"(view: '/error')
