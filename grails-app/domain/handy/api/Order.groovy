@@ -3,13 +3,13 @@ package handy.api
 class Order {
     Integer id
     String order_description
-    Integer id_client
+    Long id_client
     String order_status
     BigDecimal discount
     BigDecimal subtotal
     BigDecimal total
     Date create_at = new Date()
-    Date update_at  = new Date()
+    Date update_at = new Date()
     static hasMany = [productsOrder: ProductOrder] // Relación muchos a muchos a través de OrderProduct
     static belongsTo = Product
 
@@ -27,4 +27,5 @@ class Order {
         subtotal nullable: false, min: 0.0
         total nullable: false, min: 0.0
     }
+
 }

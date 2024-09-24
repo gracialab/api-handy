@@ -5,7 +5,7 @@ import groovy.json.JsonBuilder
 
 class OrderController {
 
-    //Called service
+    //Call service
     OrderService orderService
 
     //Endpoint simple, to get order list
@@ -17,6 +17,17 @@ class OrderController {
             ex.printStackTrace()
         }
         render(Ordenes: orderList)
+    }
+
+    //Endpoint to get Users CLIENTS actives
+    def getClients() {
+        def userList = []
+        try {
+            userList = User.findAllWhere(active: true)
+        } catch (Exception ex) {
+            ex.printStackTrace()
+        }
+        render(Clientes: userList)
     }
 
     //Endpoint, to get order by Id and return formatted json
@@ -63,7 +74,7 @@ class OrderController {
     }
 
     //Endpoint to update status order, receive id and the queryparams receive order_status
-   @Transactional
+    @Transactional
     def updateState(Integer id) {
         def order = Order.get(id)
         if (!order) {
@@ -73,12 +84,34 @@ class OrderController {
         order.update_at = new Date()
         def response = ""
         if (order.save(flush: true)) {
-            if(order.order_status == "CONFIRMADO") {
+            if (order.order_status == "CONFIRMADO") {
                 response = orderService.saveSalesReceipt(order)
             }
             render status: 201, text: response
         } else {
             render status: 401, text: "Failed to update Order"
+        }
+    }
+
+    //Endpoint to asign client to order, receive id and the queryparams receive id_client
+    @Transactional
+    def updateClient(Integer id) {
+        def order = Order.get(id)
+        order.properties = params
+        if (!order) {
+            render status: 401, text: "Order not found ID: ${id}"
+        } else {
+            User client = User.findByIdAndActive(order.id_client, true)
+            if (!client) {
+                render status: 401, text: "Client not found ID: ${order.id_client} or not active, can you create a new User Client, please"
+            } else {
+                order.update_at = new Date()
+                if (order.save(flush: true)) {
+                    render status: 201, text: "Cliente asignado al pedido #${id} - ${order.order_description}"
+                } else {
+                    render status: 401, text: "Failed to update Order"
+                }
+            }
         }
     }
 }

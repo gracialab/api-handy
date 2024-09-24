@@ -18,19 +18,22 @@ class OrderService {
         try {
             def order = new Order(json as Map)
             List<ObjectError> errors = new ArrayList<>()
+            def validProducts = validProduct(json.productos, response)
             if (!order.validate()) {
                 return validOrder(order, errors, response)
-            } else if (!order.save(flush: true)) {
+            }else if(validProducts.message.size() !== 0) {
+                return validProducts
+            }else if (!order.save(flush: true)) {
                 throw new RuntimeException("Failed save the order: ${order.errors}")
-            }
-            json.productos.each { productData ->
-                resp.put("text", validAndSaveProduct(order, productData))
+            } else {
+                json.productos.each { productData ->
+                    resp.put("text", validAndSaveProduct(order, productData))
+                }
             }
             response.put("message", resp)
             response.put("valid", true)
             return response
         } catch (Exception e) {
-            e.printStackTrace()
             response.put("valid", false)
             response.put("message", e.getMessage())
             return response
@@ -51,10 +54,30 @@ class OrderService {
         return response
     }
 
+    def validProduct(products, response) {
+        List<ObjectError> errors = new ArrayList<>()
+        products.each { productData ->
+            def product = Product.get(productData.id)
+            if (!product.hasStock(productData.quantity)) {
+                errors.add("El producto ${product.name} no tiene suficiente stock. Stock actual: ${product.stock}, " +
+                        "Cantidad solicitada: ${productData.quantity}")
+            } else if (!product) {
+                errors.add("Product not found")
+            }
+        }
+        response.put("message", errors)
+        response.put("valid", false)
+        return response
+
+    }
+
     //Method to valid an save the product_order
     def validAndSaveProduct(order, productData) {
-        def product = Product.get(productData.id)
-        if (!product) {
+        def product = Product.get(productData.id) // Verificar si el producto tiene stock suficiente
+        if (!product.hasStock(productData.quantity)) {
+            return "El producto ${product.name} no tiene suficiente stock. Stock actual: ${product.stock}, " +
+                    "Cantidad solicitada: ${productData.quantity}"
+        } else if (!product) {
             return "Product not found"
         }
         def ProductOrder = new ProductOrder(
@@ -67,8 +90,9 @@ class OrderService {
         )
         if (!ProductOrder.save(flush: true)) {
             return "Error to save"
+        } else {
+            return "Save products order"
         }
-        return "Saver order product"
     }
 
     //Service to update order, receive id
@@ -113,8 +137,10 @@ class OrderService {
             discounts order.discount
             subtotal order.subtotal
             total order.total
+            status order.order_status
             productos order.productsOrder.collect { op ->
-                [productId: op.product.id, productName: op.product.name,
+                [productId: op.product.id,
+                 productName: op.product.name,
                  quantity : op.quantity, discount: op.discount,
                  subtotal : op.subtotal, total: op.total]
             }
@@ -135,6 +161,7 @@ class OrderService {
            }
            return "Send email successfully"
        } catch(Exception ex){
+           ex.printStackTrace()
            return "Failed to send email"
        }
     }
@@ -142,13 +169,13 @@ class OrderService {
     //Method to save the sales receipt, receive order
     def saveSalesReceipt(Order order) {
         try {
-            def salesReceipt = new SalesReceipt();
+            def salesReceipt = new SalesReceipt()
             salesReceipt.id_order = order.id
             salesReceipt.id_client = order.id_client
             if (!salesReceipt.save(flush:true)) {
                return "Failed to save Sales of receipt"
             }
-            def response =sendMail(order);
+            def response =sendMail(order)
             return "Order status updated successfully:  - ${response}"
         } catch (Exception ex) {
             ex.printStackTrace()

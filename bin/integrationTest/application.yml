@@ -4,6 +4,7 @@ info:
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
 grails:
+  serverURL: "http://localhost:8080"
   gorm:
     failOnError: true
   mail:
@@ -16,6 +17,34 @@ grails:
       "mail.smtp.socketFactory.port": "465"
       "mail.smtp.socketFactory.class": "javax.net.ssl.SSLSocketFactory"
       "mail.smtp.socketFactory.fallback": "false"
+
+  plugin:
+    springsecurity:
+      rejectIfNoRule: true
+      rejectPublicInvocations: true
+      userLookup:
+        passwordEncoder: 'bcrypt' #encriptar password
+        usernamePropertyName: 'email'
+        userDomainClassName: 'handy.api.User'
+        authorityJoinClassName: null  # No se usa una clase intermedia
+      authority:
+        className: 'handy.api.Role'
+      securityConfigType: "Annotation"  # Usar anotaciones para la configuración de seguridad
+      interceptUrlMap:
+        # Permitir acceso público solo a /login/register
+        - pattern: '/login/register'
+          access: 'permitAll'
+        # Permitir acceso público a /login/auth (esto será utilizado para autenticación)
+        - pattern: '/login/auth'
+          access: 'permitAll'
+
+      sessionManagement:
+        sessionCreationPolicy: 'STATELESS'
+      filterChain:
+        chainMap:
+          - pattern: '/login/auth'
+            filters: 'JOINED_FILTERS,-csrfFilter'
+
   mime:
     disable:
       accept:
@@ -47,15 +76,39 @@ grails:
   views:
     default:
       codec: html
-dataSource:
-  url: jdbc:postgresql://localhost:5432/SalesManagerDB
-  driverClassName: org.postgresql.Driver
-  username: 'postgres'
-  password: 'password'
-  pooled: true
-  jmxExport: true
-  dbCreate: update
-  dialect: org.hibernate.dialect.PostgreSQLDialect
+environments:
+  development:
+    dataSource:
+      url: jdbc:postgresql://localhost:5432/salesmanagerdb
+      driverClassName: org.postgresql.Driver
+      username: postgres
+      password: 'admin'
+      pooled: true
+      jmxExport: true
+      dbCreate: update
+
+  production:
+    dataSource:
+      dbCreate: update
+      url: postgresql://handy-user-admin:BUlu5Ermev0Z@ep-late-forest-a5ixy0bx.us-east-2.aws.neon.tech/handy-api-db?sslmode=require
+      username: handy-user-admin
+      password: BUlu5Ermev0Z
+      properties:
+        jmxEnabled: true
+        initialSize: 5
+
+
+    test:
+      dataSource:
+        url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+        driverClassName: org.h2.Driver
+        username: sa
+        password: ''
+        pooled: true
+        jmxExport: true
+        dbCreate: update
+
+
 hibernate:
   cache:
     queries: true
@@ -63,3 +116,6 @@ hibernate:
     format_sql: true
     use_second_level_cache: false
     use_query_cache: false
+#server:
+#  port: 8080
+#  address: 0.0.0.0

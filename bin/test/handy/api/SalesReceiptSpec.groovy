@@ -3,11 +3,11 @@ package handy.api
 import grails.testing.gorm.DomainUnitTest
 import spock.lang.Specification
 
-class RoleSpec extends Specification implements DomainUnitTest<Role> {
+class SalesReceiptSpec extends Specification implements DomainUnitTest<SalesReceipt> {
 
      void "test domain constraints"() {
         when:
-        Role domain = new Role(name: "Admin", description: "admin")
+        SalesReceipt domain = new SalesReceipt()
         //TODO: Set domain props here
 
         then:
