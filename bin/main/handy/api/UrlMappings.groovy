@@ -19,6 +19,12 @@ class UrlMappings {
         "/deactivateUser/$id"(controller: "User", action: "deactivate", method: "PUT")
         "/searchUsers"(controller: "User", action: "searchUsers", method: "POST")
 
+        // Rutas personalizadas para SearchFilter
+        "/searchFilter"(controller: "searchFilter", action: "index", method: "GET")
+        "/searchFilter/save"(controller: "searchFilter", action: "save", method: "POST")
+        "/searchFilter/delete/$id"(controller: "searchFilter", action: "delete", method: "DELETE")
+
+
         // Rutas personalizadas para Order (pedidos)
         "/getClients"(controller: "Order", action: "getClients", method: "GET")
         "/saveOrder"(controller: "Order", action: "save", method: "POST")
@@ -53,6 +59,8 @@ class UrlMappings {
         "/verifyAccount"(controller: "userRegistration", action: "verifyAccount", method: "GET")
         "/login"(controller: "login", action: "auth", method: "POST")
 
+        "/password/forgot"(controller: "passwordReset", action: "forgotPassword", method: "POST")
+        "/password/reset"(controller: "passwordReset", action: "resetPassword")
 
         "500"(view: '/error')
         "404"(view: '/notFound')
