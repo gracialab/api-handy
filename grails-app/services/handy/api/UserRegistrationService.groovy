@@ -15,9 +15,6 @@ class UserRegistrationService {
     def registerUser(User user) {
         user.is_register = true
 
-        String encodedPassword = springSecurityService.encodePassword(user.password)
-        user.password = encodedPassword
-
         Role role = Role.findByNameIlike("cliente")
         if (!role) {
             throw new IllegalArgumentException("El rol ${role} no existe en la base de datos")
@@ -28,6 +25,8 @@ class UserRegistrationService {
         if (!user.validate()) {
             throw new ValidationException("No se puede guardar el usuario", user.errors)
         }
+        String encodedPassword = springSecurityService.encodePassword(user.password)
+        user.password = encodedPassword
 
         user.save(flush: true)
 

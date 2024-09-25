@@ -25,7 +25,7 @@ class User {
     String verification_token
     Instant token_expiration
     Boolean is_register = false
-    //Boolean verified = false
+//    Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]
@@ -42,7 +42,7 @@ class User {
     // Reglas de validación para los campos
     static constraints = {
         name blank: false                                                        // El campo 'name' es obligatorio
-        lastname nullable: true                                                  // El campo 'lastname' es opcional
+        lastname blank: false                                                  // El campo 'lastname' es opcional
         username blank: false, unique: true                                      // 'username' es obligatorio y debe ser único
         email email: true, blank: false, unique: true                            // 'email' es obligatorio, debe tener un formato válido y ser único
         password blank: false                                                    // 'password' es obligatorio
