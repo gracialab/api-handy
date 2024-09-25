@@ -21,4 +21,15 @@ class EmailService {
         }
     }
 
+    def sendPasswordResetEmail(String email, String token) {
+        String baseUrl = grailsApplication.config.grails.serverURL
+        String resetLink = "${baseUrl}/password/reset?token=${token}"
+
+        mailService.sendMail {
+            to email
+            subject "Recupera tu contraseña"
+            html "<p>Para restablecer tu contraseña, haz clic en el siguiente enlace: <a href='${resetLink}'>Restablecer contraseña</a></p>"
+        }
+    }
+
 }
