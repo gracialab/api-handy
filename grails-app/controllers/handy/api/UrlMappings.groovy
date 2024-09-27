@@ -20,9 +20,10 @@ class UrlMappings {
         "/searchUsers"(controller: "User", action: "searchUsers", method: "POST")
 
         // Rutas personalizadas para SearchFilter
-        "/searchFilter"(controller: "searchFilter", action: "index", method: "GET")
-        "/searchFilter/save"(controller: "searchFilter", action: "save", method: "POST")
-        "/searchFilter/delete/$id"(controller: "searchFilter", action: "delete", method: "DELETE")
+        
+        "/saveFilter"(controller: "SearchFilter", action: "saveFilter", method: "POST")
+        "/applyFilter/$filterId"(controller: "SearchFilter", action: "applyFilter", method: "GET")
+        "/deleteFilter/$id"(controller: "SearchFilter", action: "deleteFilter", method: "DELETE")
 
 
         // Rutas personalizadas para Order (pedidos)
