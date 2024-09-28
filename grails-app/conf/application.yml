@@ -20,30 +20,41 @@ grails:
 
   plugin:
     springsecurity:
-      rejectIfNoRule: true
-      rejectPublicInvocations: true
+      rejectIfNoRule: false
+      fii.rejectPublicInvocations: false
       userLookup:
-        passwordEncoder: 'bcrypt' #encriptar password
         usernamePropertyName: 'email'
         userDomainClassName: 'handy.api.User'
         authorityJoinClassName: null  # No se usa una clase intermedia
       authority:
         className: 'handy.api.Role'
-      securityConfigType: "Annotation"  # Usar anotaciones para la configuración de seguridad
+      securityConfigType: "InterceptUrlMap"
       interceptUrlMap:
-        # Permitir acceso público solo a /login/register
         - pattern: '/login/register'
           access: 'permitAll'
-        # Permitir acceso público a /login/auth (esto será utilizado para autenticación)
-        - pattern: '/login/auth'
-          access: 'permitAll'
+        - pattern: '/login'
+          access:  'permitAll'
+        - pattern: '/verifyAccount'
+          access:  'permitAll'
+        - pattern: '/password/**'
+          access:  'permitAll'
+        - pattern: '/**'
+          access: ['isAuthenticated()']
 
-      sessionManagement:
-        sessionCreationPolicy: 'STATELESS'
       filterChain:
         chainMap:
-          - pattern: '/login/auth'
-            filters: 'JOINED_FILTERS,-csrfFilter'
+          - pattern: '/login/**'
+            filters: 'JOINED_FILTERS,-jwtAuthenticationFilter,-csrfFilter'
+          - pattern: '/verifyAccount'
+            filters: 'JOINED_FILTERS,-jwtAuthenticationFilter,-csrfFilter'
+          - pattern: '/password/**'
+            filters: 'JOINED_FILTERS,-jwtAuthenticationFilter,-csrfFilter'
+          - pattern: '/**'
+            filters: 'jwtAuthenticationFilter,filterInvocationInterceptor,exceptionTranslationFilter'
+      sessionManagement:
+        sessionCreationPolicy: 'STATELESS'  # Configurar la política stateless
+        csrf:
+          enabled: false
 
   mime:
     disable:
@@ -82,7 +93,7 @@ environments:
       url: jdbc:postgresql://localhost:5432/SalesManagerDB
       driverClassName: org.postgresql.Driver
       username: postgres
-      password: 'password'
+      password: 'admin'
       pooled: true
       jmxExport: true
       dbCreate: update
