@@ -20,9 +20,9 @@ class Order {
     }
 
     static constraints = {
-        id_client nullable: true // Permitir que sea nulo
+        id_client nullable: true
         order_description nullable: false, blank: false
-        order_status nullable: false, blank: false
+        order_status nullable: false, blank: false, inList: ["PENDIENTE", "CONFIRMADO", "ENVIADO", "COMPLETADO"]
         discount nullable: false, min: 0.0
         subtotal nullable: false, min: 0.0
         total nullable: false, min: 0.0
