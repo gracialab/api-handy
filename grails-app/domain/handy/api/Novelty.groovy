@@ -8,6 +8,7 @@ class Novelty {
     Long id_order
     String novelty_type
     String novelty_description
+    BigDecimal valor = BigDecimal.ZERO
     LocalDate create_at = LocalDate.now()
 
     static mapping = {
@@ -16,8 +17,9 @@ class Novelty {
     }
     static constraints = {
         id_order nullable: false
+        valor nullable: true
         novelty_description nullable: false, blank: false
-        novelty_type nullable: false, blank: false, inList: ["DEVOLUCION", "REEMBOLSO", "RECLAMACION"]
+        novelty_type nullable: false, blank: false, inList: ["DEVOLUCION", "REEMBOLSO", "RECLAMACION", "NOTA_CREDITO"]
     }
 
 

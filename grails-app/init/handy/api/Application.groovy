@@ -10,7 +10,7 @@ import io.github.cdimascio.dotenv.Dotenv
 class Application extends GrailsAutoConfiguration {
     static void main(String[] args) {
         Dotenv dotenv = Dotenv.load()
-        // Establecer las variables de entorno para usarlas en el application.yml
+        // Establece las variables de entorno para usarlas en el application.yml
         System.setProperty("DB_URL", dotenv.get("DB_URL"))
         System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"))
         System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"))
