@@ -59,6 +59,7 @@ class UrlMappings {
         "/SendMailSalesReceipt/$id"(controller: "SalesReceipt", action: "sendEmail", method: "GET")
         // Rutas personalizadas para novedades
         "/novelty/save"(controller: "Novelty", action: "save", method: "POST")
+        "/novelty/adjustInventory/$id"(controller: "Novelty", action: "adjustInventory", method:"PUT")
         // Página principal y manejo de errores
         "/"(controller: 'application', action: 'index')
         "500"(view: '/error')
