@@ -21,4 +21,9 @@ class RoleController{
           respond e.errors, status: HttpStatus.UNPROCESSABLE_ENTITY
       }
     }
+
+    def list(){
+        def listRoles = roleService.listRoles()
+        respond listRoles, status: HttpStatus.OK
+    }
 }

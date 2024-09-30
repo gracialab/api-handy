@@ -14,4 +14,8 @@ class RoleService {
         role.save(flush: true)
         return role
     }
+
+    def listRoles(){
+        Role.list()
+    }
 }

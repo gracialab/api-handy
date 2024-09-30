@@ -75,6 +75,7 @@ class UrlMappings {
 
         // Rutas para gestionar Roles
         "/role"(controller: "role", action: "save", method: "POST")
+        "/roles"(controller: "role", action: "list", method: "GET")
 
         "500"(view: '/error')
         "404"(view: '/notFound')
