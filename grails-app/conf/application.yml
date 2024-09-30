@@ -11,7 +11,7 @@ grails:
     host: smtp.gmail.com
     port: 465
     username: saleshand7@gmail.com
-    password: kewe cijo jspn xedl
+    password: ${MAIL_PASSWORD}
     props:
       "mail.smtp.auth": "true"
       "mail.smtp.socketFactory.port": "465"
@@ -90,10 +90,10 @@ grails:
 environments:
   development:
     dataSource:
-      url: jdbc:postgresql://localhost:5432/salesmanagerdb
+      url: ${DB_URL}
       driverClassName: org.postgresql.Driver
-      username: postgres
-      password: 'admin'
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
       pooled: true
       jmxExport: true
       dbCreate: update
@@ -129,4 +129,4 @@ hibernate:
     use_query_cache: false
 server:
   port: 8080
-  address: 0.0.0.0
+#  address: 0.0.0.0

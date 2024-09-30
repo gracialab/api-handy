@@ -49,7 +49,17 @@ class UrlMappings {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
-
+        // Rutas personalizadas para Recibos de venta (salesReceipt)
+        "/SalesReceipt/$id"(controller: 'SalesReceipt', action: 'getSalesReceipt') {
+            constraints {
+                id(matches: /\d+/) // Asegura que el ID sea un número
+            }
+        }
+        "/getPdfSalesReceipt/$id"(controller: "SalesReceipt", action: "generatePdf", method: "GET")
+        "/SendMailSalesReceipt/$id"(controller: "SalesReceipt", action: "sendEmail", method: "GET")
+        // Rutas personalizadas para novedades
+        "/novelty/save"(controller: "Novelty", action: "save", method: "POST")
+        "/novelty/adjustInventory/$id"(controller: "Novelty", action: "adjustInventory", method:"PUT")
         // Página principal y manejo de errores
         "/"(controller: 'application', action: 'index')
         "500"(view: '/error')
