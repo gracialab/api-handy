@@ -1,10 +1,12 @@
 package handy.api
 
-import grails.gorm.transactions.Transactional
+
+import grails.testing.gorm.DomainUnitTest
 import grails.testing.services.ServiceUnitTest
+import grails.validation.ValidationException
 import spock.lang.Specification
 
-class UserRegistrationServiceSpec extends Specification implements ServiceUnitTest<UserRegistrationService> {
+class UserRegistrationServiceSpec extends Specification implements ServiceUnitTest<UserRegistrationService>, DomainUnitTest<User> {
 
     UserRegistrationService service = new UserRegistrationService()
 
@@ -27,10 +29,6 @@ class UserRegistrationServiceSpec extends Specification implements ServiceUnitTe
         role.description >> "client"
         role.save(flush: true)
 
-//        Role.metaClass.'static'.findByNameIlike = { String name ->
-//            return name == "cliente" ? role : null
-//        }
-
         when: "Se registra el usuario"
         def registeredUser = service.registerUser(user)
 
@@ -50,43 +48,4 @@ class UserRegistrationServiceSpec extends Specification implements ServiceUnitTe
         then: "Se lanza una ValidationException"
         thrown(ValidationException)
     }
-
-//    void "Debe lanzar excepción si el rol 'cliente' no existe"() {
-//        given: "Un usuario válido"
-//        def user = new User(
-//                name: "John",
-//                lastname: "Doe",
-//                username: "johndoe",
-//                email: "johndoe@example.com",
-//                password: "Password123!"
-//        )
-//
-//        and: "El rol 'cliente' no existe"
-//        Role.metaClass.'static'.findByNameIlike = { "cliente" -> null }
-//
-//        when: "Se intenta registrar el usuario"
-//        service.registerUser(user)
-//
-//        then: "Se lanza una IllegalArgumentException"
-//        def e = thrown(IllegalArgumentException)
-//        e.message == "El rol cliente no existe en la base de datos"
-//    }
-
-//    void "Debe guardar el usuario correctamente"() {
-//        given: "Un usuario válido"
-//        def user = Mock(User)
-//        user.validate() >> true
-//        user.addToRoles(_) >> user
-//
-//        and: "Un rol de cliente existente"
-//        def role = Mock(Role)
-//        Role.metaClass.'static'.findByNameIlike = { "cliente" -> role }
-//
-//        when: "Se registra el usuario"
-//        service.registerUser(user)
-//
-//        then: "El usuario se guarda correctamente"
-//        1 * user.save(_)
-//    }
-
 }
