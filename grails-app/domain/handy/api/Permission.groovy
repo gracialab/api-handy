@@ -5,7 +5,13 @@ class Permission {
     String name
     String description
 
-    static constraints = {
+    static hasMany = [roles: Role]
 
+    static mapping = {
+        version false
+    }
+
+    static constraints = {
+        roles joinTable: [name: 'permission_role', key: 'permission_id', column: 'role_id']
     }
 }

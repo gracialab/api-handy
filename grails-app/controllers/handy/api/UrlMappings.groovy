@@ -73,6 +73,9 @@ class UrlMappings {
         "/password/forgot"(controller: "passwordReset", action: "forgotPassword", method: "POST")
         "/password/reset"(controller: "passwordReset", action: "resetPassword")
 
+        // Rutas para gestionar Roles
+        "/role"(controller: "role", action: "save", method: "POST")
+
         "500"(view: '/error')
         "404"(view: '/notFound')
 
