@@ -18,4 +18,22 @@ class RoleService {
     def listRoles(){
         Role.list()
     }
+
+    def updateRole(int id, String newName, String newDescription){
+        def role = Role.findById(id)
+
+        if(!role){
+            throw new IllegalArgumentException("Rol no encontrado")
+        }
+
+        role.name = newName
+        role.description = newDescription
+
+        if(!role.validate()){
+            throw new ValidationException("Error", role.errors)
+        }
+
+        role.save(flush: true)
+        return role
+    }
 }
