@@ -10,24 +10,33 @@ class OrderController {
 
     //Endpoint simple, to get order list
     def index() {
-        def orderList = []
         try {
-            orderList = Order.list()
+            respond orderList: Order.list()
         } catch (Exception ex) {
             ex.printStackTrace()
         }
-        render(Ordenes: orderList)
     }
 
     //Endpoint to get Users CLIENTS actives
     def getClients() {
-        def userList = []
+        def activeUsers = []
         try {
-            userList = User.findAllWhere(active: true)
+            activeUsers = User.findAllWhere(active: true)
+            .collect { user ->
+                [
+                        id       : user.id,
+                        name     : user.name,
+                        lastname : user.lastname,
+                        username : user.username,
+                        email    : user.email,
+                        phone    : user.phone,
+                        address  : user.address,
+                ]
+            }
         } catch (Exception ex) {
             ex.printStackTrace()
         }
-        render(Clientes: userList)
+        respond activeUsers
     }
 
     //Endpoint, to get order by Id and return formatted json
