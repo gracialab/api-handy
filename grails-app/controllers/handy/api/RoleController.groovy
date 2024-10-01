@@ -26,4 +26,19 @@ class RoleController{
         def listRoles = roleService.listRoles()
         respond listRoles, status: HttpStatus.OK
     }
+
+    def update(int id){
+        def jsonRequest = request.JSON
+        String newName = jsonRequest.name
+        String newDescription = jsonRequest.description
+
+        try {
+            def result = roleService.updateRole(id, newName, newDescription)
+            respond result, status: HttpStatus.OK
+        }catch (IllegalArgumentException e){
+            respond([messsage: e.message], status: HttpStatus.BAD_REQUEST)
+        }catch (ValidationException e){
+            respond e.errors, status: HttpStatus.BAD_REQUEST
+        }
+    }
 }
