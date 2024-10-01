@@ -48,6 +48,8 @@ class RoleController{
             respond([message: result], status: HttpStatus.OK)
         }catch (IllegalArgumentException e){
             respond([messsage: e.message], status: HttpStatus.BAD_REQUEST)
+        }catch (IllegalStateException e){
+            respond([messsage: e.message], status: HttpStatus.CONFLICT)
         }
     }
 }
