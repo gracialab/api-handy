@@ -12,7 +12,7 @@ class User {
 
     // Propiedades del usuario
     String name                // Nombre del usuario
-    String lastname            // Apellido del usuario (opcional)
+    String lastname            // Apellido del usuario
     String username            // Nombre de usuario, debe ser único
     String email               // Correo electrónico del usuario, debe ser único
     String password            // Contraseña del usuario
@@ -25,7 +25,7 @@ class User {
     String verification_token
     Instant token_expiration
     Boolean is_register = false
-//    Boolean verified = false
+    Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]

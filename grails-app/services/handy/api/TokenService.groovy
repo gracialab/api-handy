@@ -18,6 +18,7 @@ class TokenService {
 
     String generateToken(User user) {
         def roles = user.roles*.name
+        def permissions = user.roles*.permissions*.name.flatten().unique()
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(jwtSecret)
@@ -25,6 +26,7 @@ class TokenService {
                     .withIssuer('handy')
                     .withSubject(user.email)
                     .withClaim("Roles", roles)
+                    .withClaim("Permissions", permissions)
                     .withClaim("id", user.id)
                     .sign(algorithm)
         } catch (JWTCreationException ex) {

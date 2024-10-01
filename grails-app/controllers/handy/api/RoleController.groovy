@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 class RoleController{
 
     RoleService roleService
+    RolePermissionService rolePermissionService
 
     def save(){
         def jsonRequest = request.JSON
@@ -50,6 +51,19 @@ class RoleController{
             respond([messsage: e.message], status: HttpStatus.BAD_REQUEST)
         }catch (IllegalStateException e){
             respond([messsage: e.message], status: HttpStatus.CONFLICT)
+        }
+    }
+
+    def addPermissionToRole(){
+        def jsonRequest = request.JSON
+        String roleName = jsonRequest.roleName
+        String permissionName = jsonRequest.permissionName
+
+        try{
+            def role = rolePermissionService.addPermissionToRole(roleName, permissionName)
+            respond role, status: HttpStatus.OK
+        }catch (IllegalArgumentException e){
+            respond([message: e.message], status: HttpStatus.BAD_REQUEST)
         }
     }
 }
