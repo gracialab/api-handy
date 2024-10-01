@@ -79,6 +79,8 @@ class UrlMappings {
         "/role/update/$id"(controller: "role", action: "update", method: "PUT")
         "/role/deleterole/$id"(controller: "role", action: "delete", method: "DELETE")
 
+        "/role/addPermissionToRole"(controller: "role", action: "addPermissionToRole", method: "POST")
+
         "500"(view: '/error')
         "404"(view: '/notFound')
 
