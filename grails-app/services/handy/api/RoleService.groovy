@@ -11,12 +11,25 @@ class RoleService {
             throw new ValidationException("No se puede guardar el Rol", role.errors)
         }
 
+        def defaultPermission = Permission.findByNameIlike("Leer Tareas")
+
+        role.addToPermissions(defaultPermission)
+
         role.save(flush: true)
         return role
     }
 
     def listRoles(){
-        Role.list()
+        def roles = Role.findAll()
+        def rolesWithPermissions = roles.collect{role ->
+            [
+                    id: role.id,
+                    name: role.name,
+                    description: role.description,
+                    permissions: role.permissions*.name
+            ]
+        }
+        return rolesWithPermissions
     }
 
     def updateRole(int id, String newName, String newDescription){
@@ -42,6 +55,17 @@ class RoleService {
 
         if(!role){
             throw new IllegalArgumentException("Rol no encontrado")
+        }
+
+        def verifiedUserWithRole = User.createCriteria().list {
+            eq("verified", true)
+            roles {
+                eq("id", role.id)
+            }
+        }
+
+        if(verifiedUserWithRole.size()>0){
+            throw new IllegalStateException("No se puede eliminar el rol porque está asignado a usuarios activos.")
         }
 
         role.delete(flush: true)
