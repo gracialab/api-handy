@@ -41,4 +41,13 @@ class RoleController{
             respond e.errors, status: HttpStatus.BAD_REQUEST
         }
     }
+
+    def delete(int id){
+        try{
+            def result = roleService.deleteRole(id)
+            respond([message: result], status: HttpStatus.OK)
+        }catch (IllegalArgumentException e){
+            respond([messsage: e.message], status: HttpStatus.BAD_REQUEST)
+        }
+    }
 }

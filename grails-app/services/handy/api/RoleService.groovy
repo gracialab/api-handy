@@ -36,4 +36,15 @@ class RoleService {
         role.save(flush: true)
         return role
     }
+
+    def deleteRole(int id){
+        def role = Role.findById(id)
+
+        if(!role){
+            throw new IllegalArgumentException("Rol no encontrado")
+        }
+
+        role.delete(flush: true)
+        return "Rol eliminado Correctamente"
+    }
 }
