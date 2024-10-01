@@ -9,6 +9,6 @@ class SearchFilter {
 
     static constraints = {
         name nullable: false, blank: false // El nombre del filtro no puede estar vacío
-        criteria nullable: false // Los criterios son obligatorios
+        criteria nullable: true
     }
 }
