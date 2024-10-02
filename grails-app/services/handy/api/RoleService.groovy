@@ -12,6 +12,9 @@ class RoleService {
         }
 
         def defaultPermission = Permission.findByNameIlike("Leer Tareas")
+        if(!defaultPermission){
+            throw new IllegalArgumentException("El permiso predeterminado no existe")
+        }
 
         role.addToPermissions(defaultPermission)
 
