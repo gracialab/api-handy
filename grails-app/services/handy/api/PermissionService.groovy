@@ -1,20 +1,18 @@
 package handy.api
 
 import grails.gorm.transactions.Transactional
+import grails.validation.ValidationException
 
 
 @Transactional
 class PermissionService {
 
 
-    Permission savePermission(String name, String description) {
-        def permission = new Permission(name: name, description: description)
-        if (!permission.save(flush: true)) {
-            // Manejo de errores
-            permission.errors.allErrors.each {
-                println it
-            }
+    def savePermission(Permission permission) {
+        if(!permission.validate()){
+            throw new ValidationException("Error", permission.errors)
         }
+        permission.save(flush: true)
         return permission
     }
 }

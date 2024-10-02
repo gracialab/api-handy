@@ -1,21 +1,23 @@
 package handy.api
 
 import grails.gorm.transactions.Transactional
+import grails.validation.ValidationException
+import org.springframework.http.HttpStatus
 
-
+@Transactional
 class PermissionController {
 
     PermissionService permissionService
 
-    @Transactional
     def save() {
         def json = request.JSON
         def permission = new Permission(json)
 
-        if (permission.save(flush: true)) {
-            render(status: 201, text: "Permission created")
-        } else {
-            render(status: 400, text: permission.errors.allErrors.collect { it.defaultMessage }.join(', '))
+        try {
+            def result = permissionService.savePermission(permission)
+            respond result, status: HttpStatus.CREATED
+        }catch (ValidationException e){
+            respond(e.errors, status: HttpStatus.UNPROCESSABLE_ENTITY)
         }
     }
 }
