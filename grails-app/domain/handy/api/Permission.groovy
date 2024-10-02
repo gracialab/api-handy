@@ -4,6 +4,7 @@ class Permission {
 
     String name
     String description
+    String module
 
     static hasMany = [roles: Role]
 
@@ -13,6 +14,8 @@ class Permission {
     }
 
     static constraints = {
-
+        name nullable: false
+        description nullable: false
+        module nullable: false
     }
 }

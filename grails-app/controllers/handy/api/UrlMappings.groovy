@@ -81,6 +81,9 @@ class UrlMappings {
 
         "/role/addPermissionToRole"(controller: "role", action: "addPermissionToRole", method: "POST")
 
+        // Rutas para gestionar Permisos
+        "/permission"(controller: "permission", action: "save", method: "POST")
+
         "500"(view: '/error')
         "404"(view: '/notFound')
 
