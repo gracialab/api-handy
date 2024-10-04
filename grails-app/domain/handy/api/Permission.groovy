@@ -14,7 +14,7 @@ class Permission {
     }
 
     static constraints = {
-        name nullable: false
+        name nullable: false, unique: true
         description nullable: false
         module nullable: false
     }

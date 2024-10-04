@@ -15,7 +15,7 @@ class Role {
     }
 
     static constraints = {
-        name blank: false, unique: true
+        name blank: false, unique: true, matches: /^ROLE_[^\s]+$/
         description blank: false
     }
 }

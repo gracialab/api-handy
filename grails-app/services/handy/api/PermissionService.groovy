@@ -15,4 +15,8 @@ class PermissionService {
         permission.save(flush: true)
         return permission
     }
+
+    def listPermissions(){
+        Permission.list()
+    }
 }

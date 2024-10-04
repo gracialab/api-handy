@@ -4,6 +4,8 @@ import handy.api.TokenService
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
@@ -26,8 +28,15 @@ class JwtAuthenticationFilter extends OncePerRequestFilter{
                 String token = authHeader.substring(7)  // Quitar "Bearer "
                 String email = tokenService.getSubject(token)
                 println(email)
+
+                List<String> roles = tokenService.getRoles(token)
+
                 if (email != null) {
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, null)
+                    List<GrantedAuthority> authorities = roles.collect{role ->
+                        new SimpleGrantedAuthority(role)
+                    }
+
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities)
                     SecurityContextHolder.getContext().setAuthentication(authentication)
                 }
             }

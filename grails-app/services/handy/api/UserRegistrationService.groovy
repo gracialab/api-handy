@@ -15,7 +15,7 @@ class UserRegistrationService {
     def registerUser(User user) {
         user.is_register = true
 
-        Role role = Role.findByNameIlike("cliente")
+        Role role = Role.findByNameIlike("ROLE_CLIENTE")
         if (!role) {
             throw new IllegalArgumentException("El rol ${role} no existe en la base de datos")
         }
