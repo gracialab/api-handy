@@ -38,8 +38,8 @@ grails:
           access:  'permitAll'
         - pattern: '/password/**'
           access:  'permitAll'
-        - pattern: '/**'
-          access: ['isAuthenticated()']
+        #- pattern: '/**'
+        # access: ['isAuthenticated()']
 
       filterChain:
         chainMap:
@@ -49,8 +49,8 @@ grails:
             filters: 'JOINED_FILTERS,-jwtAuthenticationFilter,-csrfFilter'
           - pattern: '/password/**'
             filters: 'JOINED_FILTERS,-jwtAuthenticationFilter,-csrfFilter'
-          - pattern: '/**'
-            filters: 'jwtAuthenticationFilter,filterInvocationInterceptor,exceptionTranslationFilter'
+          #- pattern: '/**'
+          # filters: 'jwtAuthenticationFilter,filterInvocationInterceptor,exceptionTranslationFilter'
       sessionManagement:
         sessionCreationPolicy: 'STATELESS'  # Configurar la política stateless
         csrf:
@@ -129,4 +129,4 @@ hibernate:
     use_query_cache: false
 server:
   port: 8080
-#  address: 0.0.0.0
+  address: 0.0.0.0

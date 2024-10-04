@@ -25,6 +25,20 @@ class UrlMappings {
         "/applyFilter/$userId"(controller: "SearchFilter", action: "applyFilter", method: "GET")
         "/deleteFilter"(controller: "SearchFilter", action: "deleteFilter", method: "DELETE")
 
+        // Rutas personalizadas para Product
+        
+        "/saveProduct"(controller: "Product", action: "save", method: "POST")
+        "/updateProduct/$id"(controller: "Product", action: "update", method: "PUT")
+        "/deleteProduct/$id"(controller: "Product", action: "delete", method: "DELETE")
+        "/deactivateProduct/$id"(controller: "Product", action: "deactivate", method: "PUT")
+        "/searchProducts"(controller: "Product", action: "searchProducts", method: "POST")
+        "/products/$id"(controller: "Product", action: "show", method: "GET")
+
+
+        // Ruta para gestionar el historial de productos
+        "/productHistory"(controller: "ProductHistory", action: "index", method: "GET")
+        "/productHistory/$id"(controller: "ProductHistory", action: "show", method: "GET")
+        "/productHistory/save"(controller: "ProductHistory", action: "save", method: "POST")
 
         // Rutas personalizadas para Order (pedidos)
         "/getClients"(controller: "Order", action: "getClients", method: "GET")
