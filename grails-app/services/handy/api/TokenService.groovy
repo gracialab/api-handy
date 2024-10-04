@@ -80,6 +80,20 @@ class TokenService {
     Instant generateExpirationDate(int numberHours) {
         return LocalDateTime.now().plusHours(numberHours).toInstant(ZoneOffset.of("-05:00"))
     }
+
+    List<String> getRoles(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(jwtSecret)
+            DecodedJWT decodedJWT = JWT.require(algorithm)
+                    .withIssuer('handy')
+                    .build()
+                    .verify(token)
+            return decodedJWT.getClaim("Roles").asList(String)
+        } catch (JWTVerificationException exception) {
+            println "Error al verificar el token: ${exception.message}"
+            return []
+        }
+    }
 }
 
 class TokenExpiredEx extends RuntimeException {

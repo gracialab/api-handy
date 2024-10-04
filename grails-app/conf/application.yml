@@ -38,6 +38,10 @@ grails:
           access:  'permitAll'
         - pattern: '/password/**'
           access:  'permitAll'
+        - pattern: '/role/**'        # Ruta protegida
+          access: [ 'hasRole("ROLE_ADMIN")' ] # Solo los usuarios con el permiso ADMIN pueden acceder
+        - pattern: '/permission/**'        # Ruta protegida
+          access: [ 'hasRole("ROLE_ADMIN")' ]
         - pattern: '/**'
           access: ['isAuthenticated()']
 

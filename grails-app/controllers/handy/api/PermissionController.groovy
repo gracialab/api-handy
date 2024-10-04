@@ -20,4 +20,9 @@ class PermissionController {
             respond(e.errors, status: HttpStatus.UNPROCESSABLE_ENTITY)
         }
     }
+
+    def list(){
+        def results = permissionService.listPermissions()
+        respond results, status: HttpStatus.OK
+    }
 }

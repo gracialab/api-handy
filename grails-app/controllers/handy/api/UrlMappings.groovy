@@ -74,15 +74,18 @@ class UrlMappings {
         "/password/reset"(controller: "passwordReset", action: "resetPassword")
 
         // Rutas para gestionar Roles
-        "/role"(controller: "role", action: "save", method: "POST")
+        "/role/save"(controller: "role", action: "save", method: "POST")
         "/roles"(controller: "role", action: "list", method: "GET")
         "/role/update/$id"(controller: "role", action: "update", method: "PUT")
         "/role/deleterole/$id"(controller: "role", action: "delete", method: "DELETE")
 
+        "/role/addRoleToUser"(controller: "userRole", action: "addRoleToUser", method: "POST")
+        "/role/removeRoleFromUser"(controller: "userRole", action: "removeRoleFromUser", method: "POST")
         "/role/addPermissionToRole"(controller: "role", action: "addPermissionToRole", method: "POST")
 
         // Rutas para gestionar Permisos
         "/permission"(controller: "permission", action: "save", method: "POST")
+        "/permission/list"(controller: "permission", action: "list", method: "GET")
 
         "500"(view: '/error')
         "404"(view: '/notFound')
