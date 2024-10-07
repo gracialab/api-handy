@@ -11,7 +11,7 @@ class ReportSalesDTO {
 
 
     static constraints = {
-        startDate nullable: false
+        startDate   nullable: false
         endDate nullable: false
         countSales nullable: true, blank: true
         countOrders nullable: true, min: 0

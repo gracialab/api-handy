@@ -3,16 +3,17 @@ package handy.api
 import java.time.LocalDate
 
 class ReportFilterCommand {
-    LocalDate startDate
-    LocalDate endDate
-    Integer countSales
-        Integer countOrders
-
+    String startDate
+    String endDate
 
     static constraints = {
         startDate nullable: false
         endDate nullable: false
-        countSales nullable: true, blank: true
-        countOrders nullable: true, min: 0
     }
+
+    ReportFilterCommand(String startDate, String endDate) {
+        this.startDate = startDate
+        this.endDate = endDate
+    }
+
 }
