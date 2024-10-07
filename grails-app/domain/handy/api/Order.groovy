@@ -1,5 +1,7 @@
 package handy.api
 
+import java.time.LocalDate
+
 class Order {
     Integer id
     String order_description
@@ -8,8 +10,8 @@ class Order {
     BigDecimal discount
     BigDecimal subtotal
     BigDecimal total
-    Date create_at = new Date()
-    Date update_at = new Date()
+    LocalDate create_at = LocalDate.now()
+    LocalDate update_at =  LocalDate.now()
     static hasMany = [productsOrder: ProductOrder, novelties : Novelty] // Relación muchos a muchos a través de OrderProduct
     static belongsTo = Product
 
