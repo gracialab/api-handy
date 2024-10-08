@@ -88,6 +88,8 @@ class UrlMappings {
         // Rutas para gestionar Permisos
         "/permission"(controller: "permission", action: "save", method: "POST")
         "/permission/list"(controller: "permission", action: "list", method: "GET")
+        "/permission/update/$id"(controller: "permission", action: "update", method: "PUT")
+        "/permission/delete/$id"(controller: "permission", action: "delete", method: "DELETE")
 
         "500"(view: '/error')
         "404"(view: '/notFound')
