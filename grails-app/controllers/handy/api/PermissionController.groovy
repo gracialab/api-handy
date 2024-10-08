@@ -25,4 +25,31 @@ class PermissionController {
         def results = permissionService.listPermissions()
         respond results, status: HttpStatus.OK
     }
+
+    def update(Long id){
+        def requestJson = request.JSON
+        String name = requestJson.name
+        String description = requestJson.description
+        String module = requestJson.module
+
+        try {
+            def result = permissionService.updatePermission(id, name, description, module)
+            respond result, status: HttpStatus.OK
+        }catch (IllegalArgumentException e){
+            respond([message: e.message], status: HttpStatus.BAD_REQUEST)
+        }catch (ValidationException e){
+            respond(e.errors, status: HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    def delete(Long id){
+        try {
+            def result = permissionService.deletePermission(id)
+            respond([message: result], status: HttpStatus.OK)
+        }catch (IllegalArgumentException e){
+            respond([message: e.message], status: HttpStatus.BAD_REQUEST)
+        }catch (IllegalStateException e){
+            respond([message: e.message], status: HttpStatus.BAD_REQUEST)
+        }
+    }
 }
