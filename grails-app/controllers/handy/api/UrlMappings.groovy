@@ -55,8 +55,8 @@ class UrlMappings {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
-        "/getPdfSalesReceipt/$id"(controller: "SalesReceipt", action: "generatePdf", method: "GET")
-        "/SendMailSalesReceipt/$id"(controller: "SalesReceipt", action: "sendEmail", method: "GET")
+        "/salesReceipt/getPdf/$id"(controller: "SalesReceipt", action: "generatePdf", method: "GET")
+        "/salesReceipt/sendMail/$id"(controller: "SalesReceipt", action: "sendEmail", method: "GET")
         // Rutas personalizadas para novedades
         "/novelty/save"(controller: "Novelty", action: "save", method: "POST")
         "/novelty/adjustInventory/$id"(controller: "Novelty", action: "adjustInventory", method:"PUT")
