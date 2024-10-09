@@ -70,7 +70,7 @@ class OrderController {
         def dataJSON = request.JSON
         def response = orderService.updateOrder(dataJSON, id)
         if (response.valid) {
-            render status: 201, text: 'Order saved successfully'
+            render(status: 201, 'Order saved successfully')
         } else {
             render status: 400, text: "Failed to save Order : ${response.errors}"
         }
