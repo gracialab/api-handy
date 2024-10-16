@@ -3,6 +3,8 @@ package handy.api
 import grails.gorm.transactions.Transactional
 import groovy.json.JsonBuilder
 
+import java.time.LocalDate
+
 class OrderController {
 
     //Call service
@@ -10,24 +12,33 @@ class OrderController {
 
     //Endpoint simple, to get order list
     def index() {
-        def orderList = []
         try {
-            orderList = Order.list()
+            respond orderList: Order.list()
         } catch (Exception ex) {
             ex.printStackTrace()
         }
-        render(Ordenes: orderList)
     }
 
     //Endpoint to get Users CLIENTS actives
     def getClients() {
-        def userList = []
+        def activeUsers = []
         try {
-            userList = User.findAllWhere(active: true)
+            activeUsers = User.findAllWhere(active: true)
+            .collect { user ->
+                [
+                        id       : user.id,
+                        name     : user.name,
+                        lastname : user.lastname,
+                        username : user.username,
+                        email    : user.email,
+                        phone    : user.phone,
+                        address  : user.address,
+                ]
+            }
         } catch (Exception ex) {
             ex.printStackTrace()
         }
-        render(Clientes: userList)
+        respond activeUsers
     }
 
     //Endpoint, to get order by Id and return formatted json
@@ -59,7 +70,7 @@ class OrderController {
         def dataJSON = request.JSON
         def response = orderService.updateOrder(dataJSON, id)
         if (response.valid) {
-            render status: 201, text: 'Order saved successfully'
+            render(status: 201, 'Order saved successfully')
         } else {
             render status: 400, text: "Failed to save Order : ${response.errors}"
         }
@@ -81,7 +92,7 @@ class OrderController {
             render status: 401, text: "Order not found ID: ${id}"
         }
         order.properties = params
-        order.update_at = new Date()
+        order.update_at = LocalDate.now()
         def response = ""
         if (order.save(flush: true)) {
             if (order.order_status == "CONFIRMADO") {
@@ -105,7 +116,7 @@ class OrderController {
             if (!client) {
                 render status: 401, text: "Client not found ID: ${order.id_client} or not active, can you create a new User Client, please"
             } else {
-                order.update_at = new Date()
+                order.update_at = LocalDate.now()
                 if (order.save(flush: true)) {
                     render status: 201, text: "Cliente asignado al pedido #${id} - ${order.order_description}"
                 } else {

@@ -17,6 +17,7 @@ class SearchFilterService {
         try {
             return searchFilter.save(flush: true)
         } catch (Exception e) {
+            e.printStackTrace()
             log.error("Error al guardar el filtro: ${e.message}", e)
             return null
         }
