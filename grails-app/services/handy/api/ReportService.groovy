@@ -22,7 +22,6 @@ class ReportService {
 
         List results = sqlQuery.list()
 
-        println(results)
         return results
     }
 
