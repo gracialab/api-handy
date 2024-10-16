@@ -14,7 +14,7 @@ class PermissionService {
 
         permission.name = permission.name.toUpperCase()
 
-        permission.save(flush: true)
+        permission.save()
         return permission
     }
 
@@ -38,7 +38,7 @@ class PermissionService {
 
         permission.name = permission.name.toUpperCase()
 
-        permission.save(flush: true)
+        permission.save()
     }
 
     def deletePermission(Long id){
@@ -51,7 +51,7 @@ class PermissionService {
             throw new IllegalStateException("No se puede eliminar el permiso, porque esta asignado a un rol o mas roles")
         }
 
-        permission.delete(flush: true)
+        permission.delete()
         return "Permiso Eliminado Correctamente"
     }
 }

@@ -45,8 +45,6 @@ class RoleService {
             throw new IllegalArgumentException("Rol no encontrado")
         }
 
-        newName = role.name.toUpperCase().startsWith("ROLE_") ? role.name.toUpperCase(): "ROLE_"+role.name.toUpperCase()
-
         role.name = newName
         role.description = newDescription
 
@@ -54,7 +52,9 @@ class RoleService {
             throw new ValidationException("Error", role.errors)
         }
 
-        role.save(flush: true)
+        role.name = role.name.toUpperCase().startsWith("ROLE_") ? role.name.toUpperCase(): "ROLE_"+role.name.toUpperCase()
+
+        role.save()
         return role
     }
 

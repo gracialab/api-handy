@@ -77,9 +77,9 @@ class UrlMappings {
 
         // Rutas para gestionar Roles
         "/role/save"(controller: "role", action: "save", method: "POST")
-        "/roles"(controller: "role", action: "list", method: "GET")
+        "/role/list"(controller: "role", action: "list", method: "GET")
         "/role/update/$id"(controller: "role", action: "update", method: "PUT")
-        "/role/deleterole/$id"(controller: "role", action: "delete", method: "DELETE")
+        "/role/delete/$id"(controller: "role", action: "delete", method: "DELETE")
 
         "/role/addRoleToUser"(controller: "userRole", action: "addRoleToUser", method: "POST")
         "/role/removeRoleFromUser"(controller: "userRole", action: "removeRoleFromUser", method: "POST")
