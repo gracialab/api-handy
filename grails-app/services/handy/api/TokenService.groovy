@@ -5,11 +5,13 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTCreationException
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.interfaces.DecodedJWT
+import grails.gorm.transactions.Transactional
 
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+@Transactional
 class TokenService {
 
     EmailService emailService
@@ -56,8 +58,8 @@ class TokenService {
         return user
     }
 
-    String getSubject(String token){
-        if(token == null){
+    String getSubject(String token) {
+        if (token == null) {
             throw new RuntimeException("Token es null")
         }
         DecodedJWT verifier = null
@@ -68,10 +70,10 @@ class TokenService {
                     .build()
                     .verify(token)
             verifier.getSubject()
-        }catch (JWTVerificationException exception){
+        } catch (JWTVerificationException exception) {
             println exception.toString()
         }
-        if(verifier.getSubject() == null){
+        if (verifier.getSubject() == null) {
             throw new RuntimeException("Verifier Invalido")
         }
         return verifier.getSubject()
@@ -80,6 +82,30 @@ class TokenService {
     Instant generateExpirationDate(int numberHours) {
         return LocalDateTime.now().plusHours(numberHours).toInstant(ZoneOffset.of("-05:00"))
     }
+
+    List<String> getRoles(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(jwtSecret)
+            DecodedJWT decodedJWT = JWT.require(algorithm)
+                    .withIssuer('handy')
+                    .build()
+                    .verify(token)
+            return decodedJWT.getClaim("Roles").asList(String)
+        } catch (JWTVerificationException exception) {
+            println "Error al verificar el token: ${exception.message}"
+            return []
+        }
+    }
+
+    List<String> getPermissions(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(jwtSecret)
+        DecodedJWT decodedJWT = JWT.require(algorithm)
+                .withIssuer('handy')
+                .build()
+                .verify(token)
+        return decodedJWT.getClaim("Permissions").asList(String)
+    }
+
 }
 
 class TokenExpiredEx extends RuntimeException {

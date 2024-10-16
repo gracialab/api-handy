@@ -7,6 +7,9 @@ import grails.validation.ValidationException
 class RoleService {
 
     def saveRole(Role role){
+        String formattedRole = role.name.toUpperCase().startsWith("ROLE_") ? role.name.toUpperCase(): "ROLE_"+role.name.toUpperCase()
+        role.name = formattedRole
+
         if(!role.validate()){
             throw new ValidationException("No se puede guardar el Rol", role.errors)
         }
@@ -49,7 +52,9 @@ class RoleService {
             throw new ValidationException("Error", role.errors)
         }
 
-        role.save(flush: true)
+        role.name = role.name.toUpperCase().startsWith("ROLE_") ? role.name.toUpperCase(): "ROLE_"+role.name.toUpperCase()
+
+        role.save()
         return role
     }
 

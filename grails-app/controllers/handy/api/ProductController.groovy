@@ -100,6 +100,7 @@ class ProductController extends RestfulController<Product> {
     /**
      * Actualiza un producto existente por ID.
      */
+     @Transactional
     def update(Long id) {
         def jsonData = request.JSON
         println "Datos recibidos para actualizar: ${jsonData}"
@@ -118,7 +119,7 @@ class ProductController extends RestfulController<Product> {
             // Crear una entrada de historial después de actualizar el producto
             productService.saveProductHistory(product)
 
-            render(contentType: 'application/json', status: 201, product)
+            respond product, status: HttpStatus.OK
         } catch (ValidationException e) {
             // renderValidationErrors(product)
             println('Aqui entro')
@@ -132,6 +133,7 @@ class ProductController extends RestfulController<Product> {
     /**
      * Elimina un producto por ID con confirmación previa.
      */
+    @Transactional
     def delete(Long id) {
         def product = Product.findById(id)
 
@@ -149,10 +151,14 @@ class ProductController extends RestfulController<Product> {
         }
 
         try {
-            productService.deleteProduct(id)
+            // Registrar en el historial antes de eliminar el producto (opcional)
+            //productService.saveProductHistory(product)
 
-            // Crear una entrada de historial después de eliminar el producto
-            productService.createProductHistory(product, 'DELETED')
+            //Elimina el historial de productos relacionados
+            ProductHistory.where { product == product }.deleteAll()
+
+            // Luego elimina el producto
+            product.delete(flush: true)
 
             render(status: HttpStatus.OK, text: 'Producto eliminado correctamente')
         } catch (Exception e) {

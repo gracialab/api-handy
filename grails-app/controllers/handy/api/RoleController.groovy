@@ -57,13 +57,15 @@ class RoleController{
     def addPermissionToRole(){
         def jsonRequest = request.JSON
         String roleName = jsonRequest.roleName
-        String permissionName = jsonRequest.permissionName
+        List<String> permissionNames = jsonRequest.permissionName
 
         try{
-            def role = rolePermissionService.addPermissionToRole(roleName, permissionName)
+            def role = rolePermissionService.addPermissionToRole(roleName, permissionNames)
             respond role, status: HttpStatus.OK
         }catch (IllegalArgumentException e){
             respond([message: e.message], status: HttpStatus.BAD_REQUEST)
+        }catch (ValidationException e){
+            respond(e.errors, status: HttpStatus.BAD_REQUEST)
         }
     }
 }

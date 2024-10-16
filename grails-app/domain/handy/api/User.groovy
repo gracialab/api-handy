@@ -25,7 +25,7 @@ class User {
     String verification_token
     Instant token_expiration
     Boolean is_register = false
-    Boolean verified = false
+    //Boolean verified = false
 
     // Relación con la clase Role (un usuario puede tener varios roles)
     static hasMany = [roles: Role]

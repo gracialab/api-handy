@@ -119,7 +119,7 @@ class ProductService {
             stock: product.stock,
             imagen: product.imagen,
             categoria: product.categoria,
-            editedBy: "admin" // Aquí puedes colocar el usuario que hizo el cambio
+            editedBy: "admin" 
         ).save(flush: true)
     }
 
