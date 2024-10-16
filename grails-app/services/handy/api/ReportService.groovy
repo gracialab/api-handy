@@ -1,15 +1,8 @@
 package handy.api
 
-import grails.gorm.transactions.Transactional
-import org.apache.commons.lang.time.DateUtils
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
-
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 class ReportService {
     def sessionFactory
@@ -29,7 +22,6 @@ class ReportService {
 
         List results = sqlQuery.list()
 
-        println(results)
         return results
     }
 
@@ -40,29 +32,21 @@ class ReportService {
         // Crea una fila en la hoja
         Row headerRow = sheet.createRow(0);
 
-        // Rellenar los encabezados en la fila 0
-        for (int i = 0; i < headers.size(); i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(headers[i]);
-            sheet.autoSizeColumn(i)
+        headers.eachWithIndex { header, idx ->
+            Cell cell = headerRow.createCell(idx)
+            cell.setCellValue(header)
+            sheet.autoSizeColumn(idx)
         }
 
-        for (int i = 0; i < results.size(); i++) {
-            Row dataRow = sheet.createRow(i + 1)
-            Cell[] cell = new Cell[headers.size()]
-            for (int j = 0; j < cell.size(); j++) {
-                cell[j] = dataRow.createCell(j)
+        // Llenar filas con datos
+        results.eachWithIndex { result, rowIdx ->
+            Row dataRow = sheet.createRow(rowIdx + 1)
+            result.eachWithIndex { value, colIdx ->
+                Cell cell = dataRow.createCell(colIdx)
+                cell.setCellValue(value?.toString() ?: "")  // Manejar nulos
             }
-            cell[0].setCellValue(results.get(i)[0])
-            cell[1].setCellValue(results.get(i)[1])
-            cell[2].setCellValue(results.get(i)[2])
-            cell[3].setCellValue(results.get(i)[3])
-            cell[4].setCellValue(results.get(i)[4])
-            cell[5].setCellValue(results.get(i)[5])
-            cell[6].setCellValue(results.get(i)[6])
-            cell[7].setCellValue(results.get(i)[7])
-            cell[8].setCellValue(results.get(i)[8])
         }
+
     }
 
 }
