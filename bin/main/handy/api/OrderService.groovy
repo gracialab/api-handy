@@ -21,7 +21,7 @@ class OrderService {
             def validProducts = validProduct(json.productos, response)
             if (!order.validate()) {
                 return validOrder(order, errors, response)
-            }else if(validProducts.message.size() !== 0) {
+            }else if(validProducts.message.size() > 0) {
                 return validProducts
             }else if (!order.save(flush: true)) {
                 throw new RuntimeException("Failed save the order: ${order.errors}")
@@ -55,14 +55,14 @@ class OrderService {
     }
 
     def validProduct(products, response) {
-        List<ObjectError> errors = new ArrayList<>()
+        List<String> errors = new ArrayList<>()
         products.each { productData ->
             def product = Product.get(productData.id)
-            if (!product.hasStock(productData.quantity)) {
+            if (!product) {
+                errors.add("Product ${productData.id} not found")
+            } else if (!product.hasStock(productData.quantity)) {
                 errors.add("El producto ${product.name} no tiene suficiente stock. Stock actual: ${product.stock}, " +
                         "Cantidad solicitada: ${productData.quantity}")
-            } else if (!product) {
-                errors.add("Product not found")
             }
         }
         response.put("message", errors)
@@ -74,12 +74,6 @@ class OrderService {
     //Method to valid an save the product_order
     def validAndSaveProduct(order, productData) {
         def product = Product.get(productData.id) // Verificar si el producto tiene stock suficiente
-        if (!product.hasStock(productData.quantity)) {
-            return "El producto ${product.name} no tiene suficiente stock. Stock actual: ${product.stock}, " +
-                    "Cantidad solicitada: ${productData.quantity}"
-        } else if (!product) {
-            return "Product not found"
-        }
         def ProductOrder = new ProductOrder(
                 product: product,
                 order: order,
@@ -91,7 +85,7 @@ class OrderService {
         if (!ProductOrder.save(flush: true)) {
             return "Error to save"
         } else {
-            return "Save products order"
+            return "Save products to order #${order.id}"
         }
     }
 

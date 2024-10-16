@@ -19,7 +19,6 @@ class ProductOrder implements Serializable {
         discount nullable: false, min: 0.0
         subtotal nullable: false, min: 0.0, scale: 2
         total nullable: false, min: 0.0, scale: 2
-        quantity nullable: false, min: 1
     }
     static mapping = {
         id composite: ['product', 'order']  // Configura la clave compuesta de Order y Product

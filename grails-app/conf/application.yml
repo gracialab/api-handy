@@ -42,8 +42,8 @@ grails:
           access: [ 'hasRole("ROLE_ADMIN")' ] # Solo los usuarios con el permiso ADMIN pueden acceder
         - pattern: '/permission/**'        # Ruta protegida
           access: [ 'hasRole("ROLE_ADMIN")' ]
-        - pattern: '/**'
-          access: ['isAuthenticated()']
+        #- pattern: '/**'
+        # access: ['isAuthenticated()']
 
       filterChain:
         chainMap:
@@ -133,4 +133,4 @@ hibernate:
     use_query_cache: false
 server:
   port: 8080
-#  address: 0.0.0.0
+  address: 0.0.0.0

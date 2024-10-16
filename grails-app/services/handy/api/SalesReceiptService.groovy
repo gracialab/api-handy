@@ -19,9 +19,10 @@ class SalesReceiptService {
 
     OrderDTO setOder(SalesReceipt salesReceipt) {
         Order order = Order.get(salesReceipt.id_order)
-        List<ProductOrderDTO> products = setProductOrderDTOList(order)
-        OrderDTO orderDTO = new OrderDTO(order.id, products, order.create_at, order.order_status, order.total)
-        return orderDTO;
+        def products = []
+        //List<ProductOrderDTO> products = setProductOrderDTOList(order)
+        //OrderDTO orderDTO = new OrderDTO(order.id, products, order.create_at, order.order_status, order.total)
+        return null;
     }
 
     UserDTO setClient(SalesReceipt salesReceipt) {
@@ -29,7 +30,7 @@ class SalesReceiptService {
         UserDTO clientDTO = new UserDTO(user.id, user.name, user.lastname, user.email, user.address)
         return clientDTO;
     }
-
+    /*
     List<ProductOrderDTO> setProductOrderDTOList(Order order) {
         List<ProductOrderDTO> productOrderDTOList = []
         order.productsOrder.each { p ->
@@ -40,7 +41,7 @@ class SalesReceiptService {
         }
         return productOrderDTOList
     }
-
+    */
     def sendMail(SalesReceiptDTO salesReceiptDTO) {
         ByteArrayOutputStream bytes2
         bytes2 = pdfRenderingService.render(template: "/templates/receipts",

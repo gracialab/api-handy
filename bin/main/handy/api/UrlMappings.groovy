@@ -49,7 +49,17 @@ class UrlMappings {
                 id(matches: /\d+/) // Asegura que el ID sea un número
             }
         }
-
+        // Rutas personalizadas para Recibos de venta (salesReceipt)
+        "/SalesReceipt/$id"(controller: 'SalesReceipt', action: 'getSalesReceipt') {
+            constraints {
+                id(matches: /\d+/) // Asegura que el ID sea un número
+            }
+        }
+        "/getPdfSalesReceipt/$id"(controller: "SalesReceipt", action: "generatePdf", method: "GET")
+        "/SendMailSalesReceipt/$id"(controller: "SalesReceipt", action: "sendEmail", method: "GET")
+        // Rutas personalizadas para novedades
+        "/novelty/save"(controller: "Novelty", action: "save", method: "POST")
+        "/novelty/adjustInventory/$id"(controller: "Novelty", action: "adjustInventory", method:"PUT")
         // Página principal y manejo de errores
         "/"(controller: 'application', action: 'index')
         "500"(view: '/error')
@@ -62,6 +72,14 @@ class UrlMappings {
 
         "/password/forgot"(controller: "passwordReset", action: "forgotPassword", method: "POST")
         "/password/reset"(controller: "passwordReset", action: "resetPassword")
+
+        // Rutas para gestionar Roles
+        "/role"(controller: "role", action: "save", method: "POST")
+        "/roles"(controller: "role", action: "list", method: "GET")
+        "/role/update/$id"(controller: "role", action: "update", method: "PUT")
+        "/role/deleterole/$id"(controller: "role", action: "delete", method: "DELETE")
+
+        "/role/addPermissionToRole"(controller: "role", action: "addPermissionToRole", method: "POST")
 
         "500"(view: '/error')
         "404"(view: '/notFound')
